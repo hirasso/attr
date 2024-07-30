@@ -1,10 +1,13 @@
 {
   "name": "hirasso/attr",
-  "description": "A tiny attribute helper for html your php html templates",
+  "description": "A tiny php attribute helper",
   "type": "library",
-  "require-dev": {
-    "symfony/var-dumper": "^7.1"
-  },
+  "authors": [
+    {
+      "name": "Rasso Hilber",
+      "email": "mail@rassohilber.com"
+    }
+  ],
   "license": "GPL-3.0-or-later",
   "autoload": {
     "files": [
@@ -14,12 +17,11 @@
       "Hirasso\\Attr\\": "src/"
     }
   },
-  "authors": [
-    {
-      "name": "Rasso Hilber",
-      "email": "mail@rassohilber.com"
-    }
-  ],
-  "minimum-stability": "stable",
-  "require": {}
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=8.2"
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^7.1"
+  }
 }
