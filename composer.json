@@ -8,7 +8,7 @@
   "license": "GPL-3.0-or-later",
   "autoload": {
     "files": [
-      "files/helpers.php"
+      "src/helpers.php"
     ],
     "psr-4": {
       "Hirasso\\Attr\\": "src/"
