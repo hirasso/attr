@@ -6,7 +6,7 @@
 
 namespace Hirasso\Attr;
 
-class Attr
+final readonly class Attr
 {
     /**
      * Converts an array of conditional attributes into a string of HTMLElement attributes.
@@ -18,7 +18,7 @@ class Attr
         $attrs = [];
 
         foreach ($_attrs as $name => $value) {
-            $value = $name === 'style'
+            $value = $name === 'style' && is_array($value)
                 ? self::array_to_styles($value)
                 : self::parse_attribute_value($value);
 
@@ -44,8 +44,9 @@ class Attr
      *
      * @throws \Exception
      */
-    private static function parse_attribute_value(array|string|bool|null $value): string|bool|null
-    {
+    private static function parse_attribute_value(
+        array|string|bool|null $value
+    ): string|bool|null {
         /** Bail early if the value is not an array */
         if (!is_array($value)) {
             return $value;
@@ -70,8 +71,9 @@ class Attr
     /**
      * Sanitize a value for an attribute
      */
-    private static function sanitize_attribute_value(mixed $value): mixed
-    {
+    private static function sanitize_attribute_value(
+        mixed $value
+    ): mixed {
         /** Only touch strings */
         if (!is_string($value)) {
             return $value;
@@ -99,15 +101,16 @@ class Attr
      * // returns: true
      * </code>
      */
-    public static function is_associative_array(array $array): bool
-    {
+    private static function is_associative_array(
+        array $array
+    ): bool {
         return ctype_digit(implode('', array_keys($array))) === false;
     }
 
     /**
      * Create a css style string from an associative array
      */
-    public static function array_to_styles(array $directives): string
+    private static function array_to_styles(array $directives): string
     {
         $styles = [];
         foreach ($directives as $property => $value) {
@@ -121,16 +124,13 @@ class Attr
 
     /**
      * Converts entities, while preserving already-encoded entities.
+     * Borrowed from the WordPress core function
      *
-     * @link https://www.php.net/htmlentities Borrowed from the PHP Manual user notes.
-     *
-     * @since 1.2.2
-     *
-     * @param string $text The text to be converted.
-     * @return string Converted text.
+     * @see https://developer.wordpress.org/reference/functions/htmlentities2/
      */
-    function htmlentities2($text)
-    {
+    private static function htmlentities2(
+        string $text
+    ): string {
         $translation_table = get_html_translation_table(HTML_ENTITIES, ENT_QUOTES);
 
         $translation_table[chr(38)] = '&';
