@@ -17,5 +17,4 @@ if (!function_exists('attr')) {
     ) {
         return Attr::attr(...func_get_args());
     }
-
 }
