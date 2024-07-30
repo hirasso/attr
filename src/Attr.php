@@ -6,23 +6,24 @@
 
 namespace Hirasso\Attr;
 
+use InvalidArgumentException;
+
 final readonly class Attr
 {
     /**
      * Converts an array of conditional attributes into a string of HTMLElement attributes.
      */
     public static function attr(
-        array $_attrs,
-        bool $debug = false
+        array $_attrs
     ): ?string {
         $attrs = [];
 
         foreach ($_attrs as $name => $value) {
             $value = $name === 'style' && is_array($value)
-                ? self::array_to_styles($value)
-                : self::parse_attribute_value($value);
+                ? self::arrayToStyles($value)
+                : self::parseAttributeValue($value);
 
-            $attrs[$name] = self::sanitize_attribute_value($value);
+            $attrs[$name] = self::sanitizeAttributeValue($value);
         }
 
         $pairs = [];
@@ -44,7 +45,7 @@ final readonly class Attr
      *
      * @throws \Exception
      */
-    private static function parse_attribute_value(
+    private static function parseAttributeValue(
         array|string|bool|null $value
     ): string|bool|null {
         /** Bail early if the value is not an array */
@@ -52,8 +53,8 @@ final readonly class Attr
             return $value;
         }
 
-        if (!self::is_associative_array($value)) {
-            throw new \Exception('$value has to be an associative array or string');
+        if (array_is_list($value)) {
+            throw new InvalidArgumentException('$value has to be an associative array or string');
         }
 
         /** Remove falsy values */
@@ -71,7 +72,7 @@ final readonly class Attr
     /**
      * Sanitize a value for an attribute
      */
-    private static function sanitize_attribute_value(
+    private static function sanitizeAttributeValue(
         mixed $value
     ): mixed {
         /** Only touch strings */
@@ -83,35 +84,15 @@ final readonly class Attr
         /** remove double spaces and line breaks */
         $value = preg_replace('/\s+/', ' ', $value);
         /** convert to entities */
-        return self::htmlentities2($value);
-    }
-
-    /**
-     * Checks whether an array is associative or not
-     *
-     * <code>
-     * $array = ['a', 'b', 'c'];
-     *
-     * Utils::is_associative_array($array);
-     * // returns: false
-     *
-     * $array = ['a' => 'a', 'b' => 'b', 'c' => 'c'];
-     *
-     * Utils::is_associative_array($array);
-     * // returns: true
-     * </code>
-     */
-    private static function is_associative_array(
-        array $array
-    ): bool {
-        return ctype_digit(implode('', array_keys($array))) === false;
+        return self::htmlentitiesAgain($value);
     }
 
     /**
      * Create a css style string from an associative array
      */
-    private static function array_to_styles(array $directives): string
-    {
+    private static function arrayToStyles(
+        array $directives
+    ): string {
         $styles = [];
         foreach ($directives as $property => $value) {
             if (in_array($value, [false, null, ""])) {
@@ -128,13 +109,19 @@ final readonly class Attr
      *
      * @see https://developer.wordpress.org/reference/functions/htmlentities2/
      */
-    private static function htmlentities2(
+    private static function htmlentitiesAgain(
         string $text
     ): string {
         $translation_table = get_html_translation_table(HTML_ENTITIES, ENT_QUOTES);
 
         $translation_table[chr(38)] = '&';
 
-        return preg_replace('/&(?![A-Za-z]{0,4}\w{2,3};|#[0-9]{2,3};)/', '&amp;', strtr($text, $translation_table));
+        $text = strtr($text, $translation_table);
+
+        return preg_replace(
+            pattern: '/&(?![A-Za-z]{0,4}\w{2,3};|#[0-9]{2,3};)/',
+            replacement: '&amp;',
+            subject: $text
+        );
     }
 }
