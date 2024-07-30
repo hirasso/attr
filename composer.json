@@ -1,0 +1,25 @@
+{
+  "name": "hirasso/attr",
+  "description": "A tiny attribute helper for html your php html templates",
+  "type": "library",
+  "require-dev": {
+    "symfony/var-dumper": "^7.1"
+  },
+  "license": "GPL-3.0-or-later",
+  "autoload": {
+    "files": [
+      "files/helpers.php"
+    ],
+    "psr-4": {
+      "Hirasso\\Attr\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Rasso Hilber",
+      "email": "mail@rassohilber.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {}
+}
