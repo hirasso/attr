@@ -10,7 +10,9 @@ composer require hirasso/attr
 
 ## Usage
 
-You define your attributes in an associative way:
+### `attr()`
+
+Define your attributes in an associative way:
 
 ```php
 <button <?= attr([
@@ -39,4 +41,17 @@ You define your attributes in an associative way:
 >
   Click Me!
 </button>
+```
+
+## `jsonInAttr()`
+
+Render JSON so that it is safe to be used inside an HTMLElement attribute:
+
+```php
+/** Example: render an attribute to be used by Alpine.js */
+echo attr([
+  'x-data' => jsonInAttr([
+      'open' => 'true',
+  ])
+])
 ```
