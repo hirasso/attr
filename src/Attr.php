@@ -11,7 +11,7 @@ use InvalidArgumentException;
 final readonly class Attr
 {
     /**
-     * Converts an array of conditional attributes into a string of HTMLElement attributes.
+     * Convert an array of conditional attributes into a string of HTMLElement attributes.
      */
     public static function attr(
         array $_attrs
@@ -123,5 +123,17 @@ final readonly class Attr
             replacement: '&amp;',
             subject: $text
         );
+    }
+
+    /**
+     * Convert a PHP array or object to a json string that's safe to be used in an attribute
+     */
+    public static function jsonInAttr(
+        mixed $value
+    ): string {
+        if (empty($value)) {
+            return '';
+        }
+        return self::htmlentitiesAgain(json_encode($value, JSON_NUMERIC_CHECK));
     }
 }
