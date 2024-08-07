@@ -129,7 +129,7 @@ final readonly class Attr
      * Convert a PHP array or object to a json string that's safe to be used in an attribute
      */
     public static function jsonInAttr(
-        mixed $value
+        mixed $value = ''
     ): string {
         if (empty($value)) {
             return '';

@@ -27,9 +27,8 @@ if (!function_exists('jsonInAttr')) {
      * Convert an object or array to JSON that's safe to be used inside a HTMLElement attribute
      */
     function jsonInAttr(
-        array $_attrs = [],
-        bool $debug = false
+        mixed $value = ''
     ) {
-        return Attr::jsonInAttr(...func_get_args());
+        return Attr::jsonInAttr($value);
     }
 }
