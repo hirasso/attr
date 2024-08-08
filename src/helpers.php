@@ -21,14 +21,14 @@ if (!function_exists('attr')) {
 }
 
 
-if (!function_exists('jsonInAttr')) {
+if (!function_exists('jsonAttr')) {
 
     /**
      * Convert an object or array to JSON that's safe to be used inside a HTMLElement attribute
      */
-    function jsonInAttr(
+    function jsonAttr(
         mixed $value = ''
     ) {
-        return Attr::jsonInAttr($value);
+        return Attr::jsonAttr($value);
     }
 }

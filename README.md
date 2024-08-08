@@ -43,15 +43,23 @@ Define your attributes in an associative way:
 </button>
 ```
 
-## `jsonInAttr()`
+## `jsonAttr()`
 
 Render JSON so that it is safe to be used inside an HTMLElement attribute:
 
 ```php
 /** Example: render an attribute to be used by Alpine.js */
-echo attr([
-  'x-data' => jsonInAttr([
-      'open' => 'true',
+<div <?= attr([
+  'x-data' => jsonAttr([
+      'open' => true,
+      "message" => "This 'quote' is <b>bold</b>"
   ])
-])
+]) ?>>
+</div>
+```
+
+..the output will look like this and can be consumed by JavaScript:
+
+```html
+<div x-data="{&quot;open&quot;:true,&quot;message&quot;:&quot;This &#039;quote&#039; is &lt;b&gt;bold&lt;\/b&gt;&quot;}"></div>
 ```

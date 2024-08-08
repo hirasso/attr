@@ -84,7 +84,7 @@ final readonly class Attr
         /** remove double spaces and line breaks */
         $value = preg_replace('/\s+/', ' ', $value);
         /** convert to entities */
-        return self::htmlentitiesAgain($value);
+        return self::safeHtmlEntities($value);
     }
 
     /**
@@ -109,7 +109,7 @@ final readonly class Attr
      *
      * @see https://developer.wordpress.org/reference/functions/htmlentities2/
      */
-    private static function htmlentitiesAgain(
+    private static function safeHtmlEntities(
         string $text
     ): string {
         $translation_table = get_html_translation_table(HTML_ENTITIES, ENT_QUOTES);
@@ -126,14 +126,14 @@ final readonly class Attr
     }
 
     /**
-     * Convert a PHP array or object to a json string that's safe to be used in an attribute
+     * Convert an array or object to a JSON string that's safe to be used in an attribute
      */
-    public static function jsonInAttr(
+    public static function jsonAttr(
         mixed $value = ''
     ): string {
         if (empty($value)) {
             return '';
         }
-        return self::htmlentitiesAgain(json_encode($value, JSON_NUMERIC_CHECK));
+        return self::safeHtmlEntities(json_encode($value, JSON_NUMERIC_CHECK));
     }
 }
