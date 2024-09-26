@@ -95,7 +95,7 @@ final readonly class Attr
     ): string {
         $styles = [];
         foreach ($directives as $property => $value) {
-            if (in_array($value, [false, null, ""])) {
+            if (in_array($value, [false, null, ""], true)) {
                 continue;
             }
             $styles[] = "$property: $value;";
