@@ -1,0 +1,13 @@
+# dotfiles
+.* export-ignore
+
+# tooling
+.editorconfig export-ignore
+
+# composer
+composer.lock export-ignore
+
+# tests
+tests export-ignore
+phpstan.neon export-ignore
+phpunit.xml export-ignore

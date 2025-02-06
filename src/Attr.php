@@ -13,26 +13,40 @@ final readonly class Attr
     /**
      * Convert an array of conditional attributes into a string of HTMLElement attributes.
      */
-    public static function attr(
-        array $_attrs
-    ): ?string {
-        $attrs = [];
+    public static function attr(array $attributes): string
+    {
 
-        foreach ($_attrs as $name => $value) {
+        if (array_is_list($attributes)) {
+            throw new InvalidArgumentException('attr() expects an associative array');
+        }
+
+        if (collect($attributes)->contains(fn($value) => array_is_list($value))) {
+            throw new InvalidArgumentException('attr() expects an associative arrays');
+        }
+
+        $attrs = collect($attributes);
+
+        $attrs = $attrs->map(function (mixed $value, string $name) {
             $value = $name === 'style' && is_array($value)
                 ? self::arrayToStyles($value)
                 : self::parseAttributeValue($value);
 
-            $attrs[$name] = self::sanitizeAttributeValue($value);
-        }
+            return self::sanitizeAttributeValue($value);
+        });
 
-        $pairs = [];
+        /** Filter out attributes that are either exactly false or null (strict!) */
+        $attrs = $attrs
+            ->filter(fn($value) => !in_array($value, [false, null], true));
 
-        foreach (array_filter($attrs) as $attr => $value) {
-            $pairs[] = $value === true ? $attr : "$attr=\"$value\"";
-        }
+        /** Build attribute strings */
+        $attrs = $attrs
+            ->map(
+                fn(mixed $value, string $attr) => $value === true
+                    ? $attr :
+                    "$attr=\"$value\""
+            );
 
-        return " " . implode(" ", $pairs);
+        return " " . $attrs->join(" ") . " ";
     }
 
     /**
@@ -48,6 +62,7 @@ final readonly class Attr
     private static function parseAttributeValue(
         array|string|bool|null $value
     ): string|bool|null {
+
         /** Bail early if the value is not an array */
         if (!is_array($value)) {
             return $value;
@@ -58,7 +73,10 @@ final readonly class Attr
         }
 
         /** Remove falsy values */
-        $value = array_filter($value);
+        $value = array_filter(
+            $value,
+            fn($value) => !in_array($value, [false, null], true)
+        );
 
         /** Use the remaining keys */
         $tokens = array_keys($value);
@@ -93,14 +111,10 @@ final readonly class Attr
     private static function arrayToStyles(
         array $directives
     ): string {
-        $styles = [];
-        foreach ($directives as $property => $value) {
-            if (in_array($value, [false, null, ""], true)) {
-                continue;
-            }
-            $styles[] = "$property: $value;";
-        }
-        return implode(" ", $styles);
+        return collect($directives)
+            ->reject(fn($value) => $value === null || $value === false)
+            ->map(fn($value, $property) => "$property: $value;")
+            ->join(" ");
     }
 
     /**

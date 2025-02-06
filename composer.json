@@ -2,26 +2,48 @@
   "name": "hirasso/attr",
   "description": "A tiny php attribute helper",
   "type": "library",
+  "license": "GPL-3.0-or-later",
   "authors": [
     {
       "name": "Rasso Hilber",
       "email": "mail@rassohilber.com"
     }
   ],
-  "license": "GPL-3.0-or-later",
   "autoload": {
-    "files": [
-      "src/helpers.php"
-    ],
     "psr-4": {
       "Hirasso\\Attr\\": "src/"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Hirasso\\Attr\\Tests\\": "tests/"
     }
   },
-  "minimum-stability": "dev",
   "require": {
-    "php": ">=8.2"
+    "php": ">=8.2",
+    "illuminate/collections": "^11.41"
   },
   "require-dev": {
-    "symfony/var-dumper": "^7.1"
+    "laravel/pint": "^1.20",
+    "pestphp/pest": "^3.7",
+    "phpstan/phpstan": "^2.1",
+    "symfony/var-dumper": "^7.2"
+  },
+  "scripts": {
+    "test": "vendor/bin/pest --no-coverage",
+    "analyse": "vendor/bin/phpstan analyse --memory-limit=2G"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
   }
 }

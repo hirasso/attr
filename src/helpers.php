@@ -11,12 +11,15 @@ if (!function_exists('attr')) {
 
     /**
      * Convert an array of conditional attributes into a string of HTMLElement attributes.
+     *
+     * @param array{
+     *      class?: string|array<string, string|int|bool|null>,
+     *      style?: string|array<string, string|int|bool|null>
+     * } $attributes
      */
-    function attr(
-        array $_attrs = [],
-        bool $debug = false
-    ) {
-        return Attr::attr(...func_get_args());
+    function attr(array $attributes)
+    {
+        return Attr::attr($attributes);
     }
 }
 
