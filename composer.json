@@ -1,6 +1,6 @@
 {
   "name": "hirasso/attr",
-  "description": "A tiny php attribute helper",
+  "description": "A tiny HTML attribute generator written in PHP. Great for projects using tailwindcss and Alpine.js 🎡",
   "type": "library",
   "license": "GPL-3.0-or-later",
   "authors": [
