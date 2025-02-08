@@ -8,7 +8,7 @@ test('generates an attribute string', function () {
 test('supports boolean attributes', function () {
     $result = attr([
         'data-current' => true,
-        'data-highlight' => ''
+        'data-highlight' => '',
     ]);
     expect($result)->toBe(' data-current data-highlight ');
 });
