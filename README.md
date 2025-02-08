@@ -1,6 +1,9 @@
 # hirasso/attr
 
-A tiny HTML attribute generator written in PHP. Great for projects using tailwindcss and Alpine.js 🎡
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/hirasso/attr.svg)](https://packagist.org/packages/hirasso/attr)
+[![Test Status](https://img.shields.io/github/actions/workflow/status/hirasso/attr/ci.yml?label=tests)](https://github.com/hirasso/attr/actions/workflows/ci.yml)
+
+**A tiny HTML attribute generator written in PHP. Great for projects using tailwindcss and Alpine.js 🎡**
 
 ## Installation
 
