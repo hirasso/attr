@@ -29,9 +29,7 @@ if (!function_exists('jsonAttr')) {
     /**
      * Convert an object or array to JSON that's safe to be used inside a HTMLElement attribute
      */
-    function jsonAttr(
-        mixed $value = ''
-    ) {
+    function jsonAttr(mixed $value = ''): string {
         return Attr::jsonAttr($value);
     }
 }
