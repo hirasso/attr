@@ -33,7 +33,7 @@ jobs:
           composer test
 
   format:
-    name: Format
+    name: Format Code
     needs: php-tests
     runs-on: ubuntu-latest
 
