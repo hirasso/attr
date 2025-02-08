@@ -70,3 +70,39 @@ test('handles style strings', function () {
     $result = attr(['style' => 'backround: red;']);
     expect($result)->toBe(' style="backround: red;" ');
 });
+
+test('escapes attributes', function () {
+    $malicious = getMaliciousAttributeValue();
+
+    $result = attr(['value' => $malicious]);
+    expect($result)->toBe(' value="&quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;" ');
+
+    $result = attr(['class' => [$malicious => true]]);
+    expect($result)->toBe(' class="&quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;" ');
+});
+
+test('escapes style attributes', function() {
+    $malicious = getMaliciousAttributeValue();
+
+    $result = attr(['style' => ['color' => $malicious]]);
+    expect($result)->toBe(' style="color: &quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;;" ');
+
+    $result = attr(['style' => [$malicious => 'red']]);
+    expect($result)->toBe(' style="&quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;: red;" ');
+});
+
+test('throws if provided with boolean true for nested style values', function() {
+    expect(attr([
+        'style' => [
+            'background' => true
+        ]
+    ]));
+})->throws(InvalidArgumentException::class);
+
+test('throws if provided with a string for nested class values', function() {
+    expect(attr([
+        'class' => [
+            'bg-green' => 'yes'
+        ]
+    ]));
+})->throws(InvalidArgumentException::class);
