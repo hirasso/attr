@@ -17,7 +17,7 @@ if (!function_exists('attr')) {
      *      style?: string|array<string, string|int|bool|null>,
      * }|array<string, string|int|bool|null> $attributes
      */
-    function attr(array $attributes)
+    function attr(array $attributes): string
     {
         return Attr::attr($attributes);
     }
@@ -29,7 +29,7 @@ if (!function_exists('jsonAttr')) {
     /**
      * Convert an object or array to JSON that's safe to be used inside a HTMLElement attribute
      */
-    function jsonAttr(mixed $value = ''): string {
+    function jsonAttr(array|object|null|false $value): ?string {
         return Attr::jsonAttr($value);
     }
 }

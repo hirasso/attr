@@ -3,6 +3,7 @@
  * Copyright (c) Rasso Hilber
  * https://rassohilber.com
  */
+
 declare(strict_types=1);
 
 namespace Hirasso\Attr;
@@ -53,10 +54,11 @@ final readonly class Attr
                     return $key;
                 }
                 return "$key=\"$value\"";
-            })
-            ->join(" ");
+            });
 
-        return " $attrs ";
+        return $attrs->isEmpty()
+            ? ''
+            : ' ' . $attrs->join(" ") . ' ';
     }
 
     /**
@@ -143,10 +145,10 @@ final readonly class Attr
     /**
      * Convert an array or object to a JSON string that's safe to be used in an attribute
      */
-    public static function jsonAttr(mixed $value = ''): string
+    public static function jsonAttr(array|object|null|false $value): ?string
     {
         if (empty($value)) {
-            return '';
+            return null;
         }
         return self::safeHtmlEntities(json_encode($value, JSON_NUMERIC_CHECK));
     }
