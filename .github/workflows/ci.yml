@@ -31,3 +31,25 @@ jobs:
         run: |
           composer analyse
           composer test
+
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+
+    permissions:
+      # required for stefanzweifel/git-auto-commit-action
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup-environment
+
+      - name: Format Code
+        run: composer format
+
+      - name: Commit linted files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Format Code

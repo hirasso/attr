@@ -34,9 +34,10 @@
     "symfony/var-dumper": "^7.2"
   },
   "scripts": {
-    "test": "vendor/bin/pest",
-    "test:watch": "vendor/bin/pest --watch",
-    "analyse": "vendor/bin/phpstan analyse --memory-limit=2G"
+    "format": "./vendor/bin/pint",
+    "test": "./vendor/bin/pest",
+    "test:watch": "./vendor/bin/pest --watch",
+    "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
