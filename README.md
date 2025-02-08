@@ -1,6 +1,9 @@
-# attr
+# hirasso/attr
 
-A tiny php attribute helper
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/hirasso/attr.svg)](https://packagist.org/packages/hirasso/attr)
+[![Test Status](https://img.shields.io/github/actions/workflow/status/hirasso/attr/ci.yml?label=tests)](https://github.com/hirasso/attr/actions/workflows/ci.yml)
+
+**A tiny HTML attribute generator written in PHP. Great for projects using tailwindcss and Alpine.js 🎡**
 
 ## Installation
 
@@ -15,14 +18,16 @@ composer require hirasso/attr
 Define your attributes in an associative way:
 
 ```php
+/** Example: render a button with custom classes and styles */
 <button <?= attr([
             'type' => 'button',
             'class' => [
-                'button button--primary' => true,
-                'button--active' => $is_active
+                'border border-current p-3' => true,
+                'bg-white text-black' => !$isActive,
+                'bg-blue-600 text-white' => $isActive
             ],
             'style' => [
-                '--color' => 'red'
+                '--active-color' => 'red'
             ],
             'data-toggle' => true
         ]) ?>>
@@ -48,7 +53,7 @@ Define your attributes in an associative way:
 Render JSON so that it is safe to be used inside an HTMLElement attribute:
 
 ```php
-/** Example: render an attribute to be used by Alpine.js */
+/** Example: render an x-data attribute for Alpine.js */
 <div <?= attr([
   'x-data' => jsonAttr([
       'open' => true,

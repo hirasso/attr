@@ -1,2 +1,8 @@
+# OS
+.DS_Store
 
-/vendor/
+# Composer
+vendor
+
+# node
+node_modules
