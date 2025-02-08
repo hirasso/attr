@@ -81,7 +81,7 @@ test('escapes attributes', function () {
     expect($result)->toBe(' class="&quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;" ');
 });
 
-test('escapes style attributes', function() {
+test('escapes style attributes', function () {
     $malicious = getMaliciousAttributeValue();
 
     $result = attr(['style' => ['color' => $malicious]]);
@@ -91,18 +91,18 @@ test('escapes style attributes', function() {
     expect($result)->toBe(' style="&quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;: red;" ');
 });
 
-test('throws if provided with boolean true for nested style values', function() {
+test('throws if provided with boolean true for nested style values', function () {
     expect(attr([
         'style' => [
-            'background' => true
-        ]
+            'background' => true,
+        ],
     ]));
 })->throws(InvalidArgumentException::class);
 
-test('throws if provided with a string for nested class values', function() {
+test('throws if provided with a string for nested class values', function () {
     expect(attr([
         'class' => [
-            'bg-green' => 'yes'
-        ]
+            'bg-green' => 'yes',
+        ],
     ]));
 })->throws(InvalidArgumentException::class);
