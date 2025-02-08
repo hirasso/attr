@@ -19,21 +19,21 @@ test('strips attributes that are exactly false or null', function () {
         'isFalse' => false,
         'isNull' => null,
         'class' => [
-            'bg-red' => false
+            'bg-red' => false,
         ],
     ]);
     expect($result)->toBe(' tabindex="0" data-value="0" ');
 });
 
-test('returns an empty string if all attributes are null or false', function() {
+test('returns an empty string if all attributes are null or false', function () {
     $result = attr([
         'foo' => false,
         'class' => [
-            'bg-red' => null
+            'bg-red' => null,
         ],
         'style' => [
-            'font-weight' => false
-        ]
+            'font-weight' => false,
+        ],
     ]);
     expect($result)->toBe('');
 });
