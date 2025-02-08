@@ -8,19 +8,34 @@ test('generates an attribute string', function () {
 test('supports boolean attributes', function () {
     $result = attr([
         'data-current' => true,
-        'data-highlight' => '',
     ]);
-    expect($result)->toBe(' data-current data-highlight ');
+    expect($result)->toBe(' data-current ');
 });
 
 test('strips attributes that are exactly false or null', function () {
     $result = attr([
         'tabindex' => '0',
         'data-value' => 0,
-        'style' => false,
-        'class' => null,
+        'isFalse' => false,
+        'isNull' => null,
+        'class' => [
+            'bg-red' => false
+        ],
     ]);
     expect($result)->toBe(' tabindex="0" data-value="0" ');
+});
+
+test('returns an empty string if all attributes are null or false', function() {
+    $result = attr([
+        'foo' => false,
+        'class' => [
+            'bg-red' => null
+        ],
+        'style' => [
+            'font-weight' => false
+        ]
+    ]);
+    expect($result)->toBe('');
 });
 
 test('handles strings for style and class', function () {

@@ -67,10 +67,6 @@ final readonly class Attr
                 }
             }
 
-            if (array_is_list($value)) {
-                throw new InvalidArgumentException("Non-associative array provided for $key");
-            }
-
             if (collect($value)->contains(fn ($nestedValue) => is_array($nestedValue))) {
                 throw new InvalidArgumentException("Nested array provided for for $key");
             }
@@ -93,10 +89,10 @@ final readonly class Attr
             is_string($value) => self::sanitizeStringValue($value),
             default => $value
         })
-            ->filter(fn ($value) => ! self::isNullOrFalse($value))
+            ->filter(fn ($value) => ! self::isEmptyValue($value))
             ->map(function (string|null|true|int $value, string $key) {
                 /** boolean attributes don't need a value */
-                if ($value === true || $value === '') {
+                if ($value === true) {
                     return $key;
                 }
 
@@ -105,11 +101,11 @@ final readonly class Attr
     }
 
     /**
-     * Check if a value is exactly null or false
+     * Check if a value is exactly null or false or an empty string
      */
-    private static function isNullOrFalse(mixed $value)
+    private static function isEmptyValue(mixed $value)
     {
-        return $value === null || $value === false;
+        return $value === null || $value === false || $value === '';
     }
 
     /**
@@ -118,7 +114,7 @@ final readonly class Attr
     private static function arrayToClassList(array $value): ?string
     {
         $values = collect($value)
-            ->filter(fn ($value) => ! self::isNullOrFalse($value));
+            ->filter(fn ($value) => ! self::isEmptyValue($value));
 
         if ($values->isEmpty()) {
             return null;
