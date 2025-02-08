@@ -34,6 +34,7 @@ jobs:
 
   format:
     name: Format
+    needs: php-tests
     runs-on: ubuntu-latest
 
     permissions:
