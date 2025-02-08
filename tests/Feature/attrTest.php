@@ -5,6 +5,14 @@ test('generates an attribute string', function () {
     expect($result)->toBe(' class="border border-red bg-black" ');
 });
 
+test('supports boolean attributes', function () {
+    $result = attr([
+        'data-current' => true,
+        'data-highlight' => ''
+    ]);
+    expect($result)->toBe(' data-current data-highlight ');
+});
+
 test('strips attributes that are exactly false or null', function () {
     $result = attr([
         'tabindex' => '0',
