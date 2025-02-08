@@ -38,12 +38,7 @@ Define your attributes in an associative way:
 ...and the `attr` function transforms them into normal HTML:
 
 ```html
-<button
-  type="button"
-  class="button button--primary button--active"
-  style="--color: red;"
-  data-toggle
->
+<button type="button" class="border border-current p-3 bg-white text-black" style="--active-color: red;" data-toggle>
   Click Me!
 </button>
 ```
@@ -57,7 +52,7 @@ Render JSON so that it is safe to be used inside an HTMLElement attribute:
 <div <?= attr([
   'x-data' => jsonAttr([
       'open' => true,
-      "message" => "This 'quote' is <b>bold</b>"
+      "message" => "This 'quote' contains <b>bold text</b>"
   ])
 ]) ?>>
 </div>
@@ -66,5 +61,7 @@ Render JSON so that it is safe to be used inside an HTMLElement attribute:
 ..the output will look like this and can be consumed by JavaScript:
 
 ```html
-<div x-data="{&quot;open&quot;:true,&quot;message&quot;:&quot;This &#039;quote&#039; is &lt;b&gt;bold&lt;\/b&gt;&quot;}"></div>
+<div x-data="{&quot;open&quot;:true,&quot;message&quot;:&quot;This &#039;quote&#039; contains &lt;b&gt;bold text&lt;\/b&gt;&quot;}"></div>
 ```
+
+More examples can be seen by browsing the [test](./tests/Feature/attrTest.php) files.
