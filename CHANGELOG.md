@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1
+
+### Patch Changes
+
+- 1b5fcff: Optimize examples in readme file
+
 ## 2.0.0
 
 ### Major Changes
