@@ -3,9 +3,11 @@
  * Copyright (c) Rasso Hilber
  * https://rassohilber.com
  */
+declare(strict_types=1);
 
 namespace Hirasso\Attr;
 
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
 final readonly class Attr
@@ -15,88 +17,86 @@ final readonly class Attr
      */
     public static function attr(array $attributes): string
     {
-
-        if (array_is_list($attributes)) {
-            throw new InvalidArgumentException('attr() expects an associative array');
-        }
-
-        if (collect($attributes)->contains(fn($value) => array_is_list($value))) {
-            throw new InvalidArgumentException('attr() expects an associative arrays');
-        }
-
         $attrs = collect($attributes);
 
-        $attrs = $attrs->map(function (mixed $value, string $name) {
-            $value = $name === 'style' && is_array($value)
-                ? self::arrayToStyles($value)
-                : self::parseAttributeValue($value);
+        self::validateKeys($attrs);
 
-            return self::sanitizeAttributeValue($value);
+        $attrs->each(function ($value, $key) {
+            if (!is_array($value)) {
+                return;
+            }
+            if (!in_array($key, ['class', 'style'])) {
+                throw new InvalidArgumentException("Only 'class' and 'style' can contain an array");
+            }
+            if (array_is_list($value)) {
+                throw new InvalidArgumentException("Non-associative array provided for $key");
+            }
+            if (collect($value)->contains(fn($nestedValue) => is_array($nestedValue))) {
+                throw new InvalidArgumentException("Nested array provided for for $key");
+            }
         });
 
-        /** Filter out attributes that are either exactly false or null (strict!) */
-        $attrs = $attrs
-            ->filter(fn($value) => !in_array($value, [false, null], true));
 
-        /** Build attribute strings */
-        $attrs = $attrs
-            ->map(
-                fn(mixed $value, string $attr) => $value === true
-                    ? $attr :
-                    "$attr=\"$value\""
-            );
+        $attrs = $attrs->map(fn(array|string|bool|null|int $value, string $key) => match (true) {
+            /** the key is 'style', the value is an array */
+            $key === 'style' && is_array($value) => self::arrayToStyleString($value),
+            /** the key is 'class', the value is an array */
+            $key === 'class' && is_array($value) => self::arrayToClassString($value),
+            /** the value is an string */
+            is_string($value) => self::sanitizeStringValue($value),
+            default => $value
+        })
+            ->filter(fn($value) => !self::isEmptyValue($value))
+            ->map(function (string|null|bool|int $value, string $key) {
+                /** boolean attributes don't need a value */
+                if ($value === true || $value === '') {
+                    return $key;
+                }
+                return "$key=\"$value\"";
+            })
+            ->join(" ");
 
-        return " " . $attrs->join(" ") . " ";
+        return " $attrs ";
     }
 
     /**
-     * Parse an attribute value.
-     *
-     * Arrays will get special treatment:
-     *
-     *  - remove falsy values
-     *  - remove duplicates
-     *
-     * @throws \Exception
+     * Validate that all attribute keys are strings
      */
-    private static function parseAttributeValue(
-        array|string|bool|null $value
-    ): string|bool|null {
-
-        /** Bail early if the value is not an array */
-        if (!is_array($value)) {
-            return $value;
+    private static function validateKeys(Collection $attributes)
+    {
+        if ($attributes->keys()->some(fn($key) => is_int($key))) {
+            throw new InvalidArgumentException('All attribute keys must be strings');
         }
+    }
 
-        if (array_is_list($value)) {
-            throw new InvalidArgumentException('$value has to be an associative array or string');
-        }
+    /**
+     * Check if a value is exactly null or false
+     */
+    private static function isEmptyValue(mixed $value)
+    {
+        return $value === null || $value === false;
+    }
 
-        /** Remove falsy values */
-        $value = array_filter(
-            $value,
-            fn($value) => !in_array($value, [false, null], true)
-        );
+    /**
+     * Convert a class array to a string
+     */
+    private static function arrayToClassString(array $value): ?string
+    {
+        $values = collect($value)
+            ->filter(fn($value) => !self::isEmptyValue($value));
 
-        /** Use the remaining keys */
-        $tokens = array_keys($value);
+        self::validateKeys($values);
 
-        /** Remove duplicates */
-        $deduped = array_unique(explode(' ', implode(' ', $tokens)));
-
-        return implode(' ', $deduped);
+        return $values->isEmpty()
+            ? null
+            : $values->keys()->unique()->join(' ');
     }
 
     /**
      * Sanitize a value for an attribute
      */
-    private static function sanitizeAttributeValue(
-        mixed $value
-    ): mixed {
-        /** Only touch strings */
-        if (!is_string($value)) {
-            return $value;
-        }
+    private static function sanitizeStringValue(string $value): string
+    {
         /** trim whitespace */
         $value = trim($value);
         /** remove double spaces and line breaks */
@@ -108,10 +108,14 @@ final readonly class Attr
     /**
      * Create a css style string from an associative array
      */
-    private static function arrayToStyles(
-        array $directives
+    private static function arrayToStyleString(
+        array $value
     ): string {
-        return collect($directives)
+        $directives = collect($value);
+
+        self::validateKeys($directives);
+
+        return $directives
             ->reject(fn($value) => $value === null || $value === false)
             ->map(fn($value, $property) => "$property: $value;")
             ->join(" ");
@@ -126,25 +130,21 @@ final readonly class Attr
     private static function safeHtmlEntities(
         string $text
     ): string {
-        $translation_table = get_html_translation_table(HTML_ENTITIES, ENT_QUOTES);
-
-        $translation_table[chr(38)] = '&';
-
-        $text = strtr($text, $translation_table);
+        $translationTable = get_html_translation_table(HTML_ENTITIES, ENT_QUOTES);
+        $translationTable[chr(38)] = '&';
 
         return preg_replace(
             pattern: '/&(?![A-Za-z]{0,4}\w{2,3};|#[0-9]{2,3};)/',
             replacement: '&amp;',
-            subject: $text
+            subject: strtr($text, $translationTable)
         );
     }
 
     /**
      * Convert an array or object to a JSON string that's safe to be used in an attribute
      */
-    public static function jsonAttr(
-        mixed $value = ''
-    ): string {
+    public static function jsonAttr(mixed $value = ''): string
+    {
         if (empty($value)) {
             return '';
         }
