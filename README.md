@@ -1,6 +1,6 @@
 # attr
 
-A tiny php attribute helper
+A tiny HTML attribute generator written in PHP. Great for projects using tailwindcss and Alpine.js 🎡
 
 ## Installation
 
