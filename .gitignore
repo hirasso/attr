@@ -3,3 +3,6 @@
 
 # Composer
 vendor
+
+# node
+node_modules

@@ -7,6 +7,10 @@
 # composer
 composer.lock export-ignore
 
+# node
+package.json export-ignore
+pnpm-lock.yaml export-ignore
+
 # tests
 tests export-ignore
 phpstan.neon export-ignore
