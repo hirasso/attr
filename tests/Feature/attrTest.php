@@ -18,7 +18,7 @@ test('strips attributes that are exactly false or null', function () {
 test('handles strings for style and class', function () {
     $result = attr([
         'class' => 'border border-red',
-        'style' => 'color: black;'
+        'style' => 'color: black;',
     ]);
     expect($result)->toBe(' class="border border-red" style="color: black;" ');
 });
@@ -27,13 +27,13 @@ test('handles arrays for style and class', function () {
     $result = attr([
         'class' => [
             'border border-red' => true,
-            'hidden' => false
+            'hidden' => false,
         ],
         'style' => [
             'color' => 'black',
             'background' => 'white',
-            'border' => false
-        ]
+            'border' => false,
+        ],
     ]);
     expect($result)->toBe(' class="border border-red" style="color: black; background: white;" ');
 });
@@ -57,8 +57,8 @@ test('throws when provided with a nested array for any attribute', function () {
     // @phpstan-ignore argument.type
     attr([
         'class' => [
-            'foo' => ['bar']
-        ]
+            'foo' => ['bar'],
+        ],
     ]);
 })->throws(InvalidArgumentException::class);
 

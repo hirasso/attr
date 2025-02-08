@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (c) Rasso Hilber
  * https://rassohilber.com
@@ -23,22 +24,21 @@ final readonly class Attr
         self::validateKeys($attrs);
 
         $attrs->each(function ($value, $key) {
-            if (!is_array($value)) {
+            if (! is_array($value)) {
                 return;
             }
-            if (!in_array($key, ['class', 'style'])) {
+            if (! in_array($key, ['class', 'style'])) {
                 throw new InvalidArgumentException("Only 'class' and 'style' can contain an array");
             }
             if (array_is_list($value)) {
                 throw new InvalidArgumentException("Non-associative array provided for $key");
             }
-            if (collect($value)->contains(fn($nestedValue) => is_array($nestedValue))) {
+            if (collect($value)->contains(fn ($nestedValue) => is_array($nestedValue))) {
                 throw new InvalidArgumentException("Nested array provided for for $key");
             }
         });
 
-
-        $attrs = $attrs->map(fn(array|string|bool|null|int $value, string $key) => match (true) {
+        $attrs = $attrs->map(fn (array|string|bool|null|int $value, string $key) => match (true) {
             /** the key is 'style', the value is an array */
             $key === 'style' && is_array($value) => self::arrayToStyleString($value),
             /** the key is 'class', the value is an array */
@@ -47,18 +47,19 @@ final readonly class Attr
             is_string($value) => self::sanitizeStringValue($value),
             default => $value
         })
-            ->filter(fn($value) => !self::isEmptyValue($value))
+            ->filter(fn ($value) => ! self::isEmptyValue($value))
             ->map(function (string|null|bool|int $value, string $key) {
                 /** boolean attributes don't need a value */
                 if ($value === true || $value === '') {
                     return $key;
                 }
+
                 return "$key=\"$value\"";
             });
 
         return $attrs->isEmpty()
             ? ''
-            : ' ' . $attrs->join(" ") . ' ';
+            : ' '.$attrs->join(' ').' ';
     }
 
     /**
@@ -66,7 +67,7 @@ final readonly class Attr
      */
     private static function validateKeys(Collection $attributes)
     {
-        if ($attributes->keys()->some(fn($key) => is_int($key))) {
+        if ($attributes->keys()->some(fn ($key) => is_int($key))) {
             throw new InvalidArgumentException('All attribute keys must be strings');
         }
     }
@@ -85,7 +86,7 @@ final readonly class Attr
     private static function arrayToClassString(array $value): ?string
     {
         $values = collect($value)
-            ->filter(fn($value) => !self::isEmptyValue($value));
+            ->filter(fn ($value) => ! self::isEmptyValue($value));
 
         self::validateKeys($values);
 
@@ -103,6 +104,7 @@ final readonly class Attr
         $value = trim($value);
         /** remove double spaces and line breaks */
         $value = preg_replace('/\s+/', ' ', $value);
+
         /** convert to entities */
         return self::safeHtmlEntities($value);
     }
@@ -118,9 +120,9 @@ final readonly class Attr
         self::validateKeys($directives);
 
         return $directives
-            ->reject(fn($value) => $value === null || $value === false)
-            ->map(fn($value, $property) => "$property: $value;")
-            ->join(" ");
+            ->reject(fn ($value) => $value === null || $value === false)
+            ->map(fn ($value, $property) => "$property: $value;")
+            ->join(' ');
     }
 
     /**
@@ -150,6 +152,7 @@ final readonly class Attr
         if (empty($value)) {
             return null;
         }
+
         return self::safeHtmlEntities(json_encode($value, JSON_NUMERIC_CHECK));
     }
 }
