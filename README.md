@@ -19,7 +19,7 @@ composer require hirasso/attr
 Define your attributes in an associative way:
 
 ```php
-/** Example: render a button with custom classes and styles */
+<?php /** Example: render a button with custom classes and styles */  ?>
 <button <?= attr([
             'type' => 'button',
             'class' => [
@@ -49,7 +49,7 @@ Define your attributes in an associative way:
 Render JSON so that it is safe to be used inside an HTMLElement attribute:
 
 ```php
-/** Example: render an x-data attribute for Alpine.js */
+<?php /** Example: render an x-data attribute for Alpine.js */  ?>
 <div <?= attr([
   'x-data' => jsonAttr([
       'open' => true,
