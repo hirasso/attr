@@ -129,3 +129,13 @@ test('throws if provided with a string for nested class values', function () {
         ],
     ]));
 })->throws(InvalidArgumentException::class);
+
+test('supports colons in keys and values', function () {
+    $result = attr([
+        'class' => 'hidden md:block',
+        'x-data' => '{open: false}',
+        ':class' => '{"bg-red": open}',
+    ]);
+    dump($result);
+    expect($result)->toBe(' class="hidden md:block" x-data="{open: false}" :class="{&quot;bg-red&quot;: open}" ');
+});
