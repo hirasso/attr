@@ -58,7 +58,7 @@ test('handles arrays for style and class', function () {
             'border' => false,
         ],
     ]);
-    expect($result)->toBe(' class="border border-red" style="color: black; background: white;" ');
+    expect($result)->toBe(' class="border border-red" style="color: black; background: white" ');
 });
 
 test('throws when provided with a list like attr(["foo", "bar", ...])', function () {
@@ -108,10 +108,10 @@ test('escapes style attributes', function () {
     $malicious = getMaliciousAttributeValue();
 
     $result = attr(['style' => ['color' => $malicious]]);
-    expect($result)->toBe(' style="color: &quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;;" ');
+    expect($result)->toBe(' style="color: &quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;" ');
 
     $result = attr(['style' => [$malicious => 'red']]);
-    expect($result)->toBe(' style="&quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;: red;" ');
+    expect($result)->toBe(' style="&quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;: red" ');
 });
 
 test('throws if provided with boolean true for nested style values', function () {

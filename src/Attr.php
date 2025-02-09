@@ -152,9 +152,9 @@ final readonly class Attr
                 $property = self::sanitizeStringValue($property);
                 $value = self::sanitizeStringValue((string) $value);
 
-                return "$property: $value;";
+                return "$property: $value";
             })
-            ->join(' ');
+            ->join('; ');
     }
 
     /**
