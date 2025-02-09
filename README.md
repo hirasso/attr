@@ -67,5 +67,4 @@ Render JSON so that it is safe to be used inside an HTMLElement attribute:
 
 > [!TIP]
 > More examples can be seen by browsing the **[test files](./tests/Feature/attrTest.php)**.
-> Also, it's worth noting that both `attr()` as well as `jsonAttr()` escape all attributes for you.
-> No need to do it yourself 🦦
+> Also, it's worth noting that both `attr()` as well as `jsonAttr()` **escape all attributes for you**. No need to do it yourself 🦦
