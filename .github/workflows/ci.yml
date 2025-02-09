@@ -30,7 +30,14 @@ jobs:
       - name: Run Tests
         run: |
           composer analyse
-          composer test
+          composer test:ci
+
+      - name: Check code coverage
+        uses: codecov/codecov-action@v4
+        if: ${{ matrix.php == 8.3 }}
+        with:
+          file: ./coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   format:
     name: Format Code
@@ -38,7 +45,6 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      # required for stefanzweifel/git-auto-commit-action
       contents: write
 
     steps:
@@ -54,3 +60,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Format Code
+          file_pattern: 'src/*.php tests/*.php'
