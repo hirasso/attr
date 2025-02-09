@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.0.2
+
+### Patch Changes
+
+- 161ead8: Automatically format the source code at `pre-commit` via husky+lint-staged
+- b8e0b1a: 100% code coverage
+- 81f458f: Upload code coverage to codecov and add a coverage badge to the readme
+- 4160ce6: refactor
+
 ## 2.0.1
 
 ### Patch Changes
