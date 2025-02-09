@@ -65,7 +65,7 @@ Render JSON so that it is safe to be used inside an HTMLElement attribute:
 <div x-data="{&quot;open&quot;:true,&quot;message&quot;:&quot;This &#039;quote&#039; contains &lt;b&gt;bold text&lt;\/b&gt;&quot;}"></div>
 ```
 
-More examples can be seen by browsing the [test](./tests/Feature/attrTest.php) files.
-
 > [!TIP]
-> Both `attr()` as well as `jsonAttr()` escape all attributes for you. No need to do it yourself.
+> More examples can be seen by browsing the **[test files](./tests/Feature/attrTest.php)**.
+> Also, it's worth noting that both `attr()` as well as `jsonAttr()` escape all attributes for you.
+> No need to do it yourself 🦦
