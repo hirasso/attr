@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.3
+
+### Patch Changes
+
+- 45c69b6: Relax illuminate/collections version constraint to `^11`
+
 ## 2.0.2
 
 ### Patch Changes
