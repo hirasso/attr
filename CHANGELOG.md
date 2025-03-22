@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.0
+
+### Major Changes
+
+- c6bab48: BREAKING: Do not strip empty string values anymore. Also, keep strings basically untouched. Only escape them.
+
 ## 2.0.3
 
 ### Patch Changes
