@@ -14,15 +14,17 @@ test('supports boolean attributes', function () {
 
 test('strips attributes that are exactly false or null', function () {
     $result = attr([
-        'tabindex' => '0',
-        'data-value' => 0,
+        'data-string-numeric' => '0',
+        'data-string-empty' => '',
+        'data-string-space' => ' ',
+        'data-int-zero' => 0,
         'isFalse' => false,
         'isNull' => null,
         'class' => [
             'bg-red' => false,
         ],
     ]);
-    expect($result)->toBe(' tabindex="0" data-value="0" ');
+    expect($result)->toBe(' data-string-numeric="0" data-string-empty="" data-string-space=" " data-int-zero="0" ');
 });
 
 test('returns an empty string if all attributes are null or false', function () {

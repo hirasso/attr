@@ -86,10 +86,10 @@ final readonly class Attr
             /** the key is 'class', the value is an array */
             $key === 'class' && is_array($value) => self::arrayToClassList($value),
             /** the value is a string */
-            is_string($value) => self::sanitizeStringValue($value),
+            is_string($value) => self::safeHtmlEntities($value),
             default => $value
         })
-            ->filter(fn ($value) => ! self::isEmptyValue($value))
+            ->filter(fn ($value) => ! self::isNullOrFalse($value))
             ->map(function (string|null|true|int $value, string $key) {
                 /** boolean attributes don't need a value */
                 if ($value === true) {
@@ -101,11 +101,11 @@ final readonly class Attr
     }
 
     /**
-     * Check if a value is exactly null or false or an empty string
+     * Check if a value is exactly null or false
      */
-    private static function isEmptyValue(mixed $value)
+    private static function isNullOrFalse(mixed $value)
     {
-        return $value === null || $value === false || $value === '';
+        return $value === null || $value === false;
     }
 
     /**
@@ -114,28 +114,14 @@ final readonly class Attr
     private static function arrayToClassList(array $value): ?string
     {
         $values = collect($value)
-            ->filter(fn ($value) => ! self::isEmptyValue($value));
+            ->filter(fn ($value) => ! self::isNullOrFalse($value));
 
         if ($values->isEmpty()) {
             return null;
         }
         $classList = $values->keys()->unique()->join(' ');
 
-        return self::sanitizeStringValue($classList);
-    }
-
-    /**
-     * Sanitize a value for an attribute
-     */
-    private static function sanitizeStringValue(string $value): string
-    {
-        /** trim whitespace */
-        $value = trim($value);
-        /** remove double spaces and line breaks */
-        $value = preg_replace('/\s+/', ' ', $value);
-
-        /** escape the value */
-        return self::safeHtmlEntities($value);
+        return self::safeHtmlEntities(trim($classList));
     }
 
     /**
@@ -143,18 +129,16 @@ final readonly class Attr
      */
     private static function arrayToStyleString(
         array $arr
-    ): string {
-        $directives = collect($arr);
-
-        return $directives
+    ): ?string {
+        $directives = collect($arr)
             ->reject(fn ($value) => $value === null || $value === false)
             ->map(function ($value, $property) {
-                $property = self::sanitizeStringValue($property);
-                $value = self::sanitizeStringValue((string) $value);
+                return self::safeHtmlEntities("$property: ".(string) $value);
+            });
 
-                return "$property: $value";
-            })
-            ->join('; ');
+        return $directives->isEmpty()
+            ? null
+            : $directives->join('; ');
     }
 
     /**
