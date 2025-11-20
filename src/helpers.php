@@ -14,8 +14,8 @@ if (! function_exists('attr')) {
      *
      * @param array{
      *      class?: string|array<string, int|bool|null>,
-     *      style?: string|array<string, string|int|false|null>,
-     * }|array<string, string|int|bool|null> $attributes
+     *      style?: string|array<string, string|int|float|false|null>,
+     * }|array<string, string|int|float|bool|null> $attributes
      */
     function attr(array $attributes): string
     {

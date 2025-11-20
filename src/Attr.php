@@ -80,7 +80,7 @@ final readonly class Attr
      */
     private static function transform(Collection $attrs): Collection
     {
-        return $attrs->map(fn (array|string|bool|null|int $value, string $key) => match (true) {
+        return $attrs->map(fn (array|string|bool|null|int|float $value, string $key) => match (true) {
             /** the key is 'style', the value is an array */
             $key === 'style' && is_array($value) => self::arrayToStyleString($value),
             /** the key is 'class', the value is an array */
@@ -90,7 +90,7 @@ final readonly class Attr
             default => $value
         })
             ->filter(fn ($value) => ! self::isNullOrFalse($value))
-            ->map(function (string|null|true|int $value, string $key) {
+            ->map(function (string|null|true|int|float $value, string $key) {
                 /** boolean attributes don't need a value */
                 if ($value === true) {
                     return $key;

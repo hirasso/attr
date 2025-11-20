@@ -138,6 +138,12 @@ test('supports colons in keys and values', function () {
         'x-data' => '{open: false}',
         ':class' => '{"bg-red": open}',
     ]);
-    dump($result);
     expect($result)->toBe(' class="hidden md:block" x-data="{open: false}" :class="{&quot;bg-red&quot;: open}" ');
+});
+
+test('supports floats as values', function () {
+    $result = attr([
+        'data-float' => 1.3,
+    ]);
+    expect($result)->toBe(' data-float="1.3" ');
 });
