@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.1
+
+### Patch Changes
+
+- cc69df3: Allow `float` as type for attribute values
+
 ## 3.0.0
 
 ### Major Changes
