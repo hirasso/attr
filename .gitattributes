@@ -12,3 +12,7 @@ pnpm-lock.yaml export-ignore
 tests export-ignore
 phpstan.neon export-ignore
 phpunit.xml export-ignore
+
+# other
+pint.json
+LICENSE
