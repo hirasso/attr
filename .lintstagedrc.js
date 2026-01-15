@@ -1,3 +1,3 @@
 export default {
-  "**/*.php": ["composer format"],
+  "**/*.php": ["composer analyse", "composer format"],
 };
