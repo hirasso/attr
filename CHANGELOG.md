@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.2
+
+### Patch Changes
+
+- e17df2d: Allow illuminate/collections^12
+
 ## 3.0.1
 
 ### Patch Changes
