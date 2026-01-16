@@ -1,5 +1,5 @@
 name: Setup Environment
-
+description: Setup the Environment for CI
 inputs:
   php-version:
     description: The PHP version to install
