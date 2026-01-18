@@ -164,15 +164,16 @@ final readonly class Attr
             return '';
         }
 
-        return json_encode(
-            $value,
-            JSON_UNESCAPED_UNICODE |
-            JSON_UNESCAPED_SLASHES |
-            JSON_THROW_ON_ERROR |
-            JSON_HEX_QUOT |
-            JSON_HEX_TAG |
-            JSON_HEX_AMP |
-            JSON_HEX_APOS
+        $json = json_encode(
+            value: $value,
+            flags: JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR
+        );
+
+        return htmlspecialchars(
+            string: $json,
+            flags: ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+            encoding: 'UTF-8',
+            double_encode: false
         );
     }
 }
