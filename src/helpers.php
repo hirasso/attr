@@ -7,7 +7,7 @@
 
 use Hirasso\Attr\Attr;
 
-if (! function_exists('attr')) {
+if (! \function_exists('attr')) {
 
     /**
      * Convert an array of conditional attributes into a string of HTMLElement attributes.
@@ -23,7 +23,7 @@ if (! function_exists('attr')) {
     }
 }
 
-if (! function_exists('jsonAttr')) {
+if (! \function_exists('jsonAttr')) {
 
     /**
      * Convert an object or array to JSON that's safe to be used inside a HTMLElement attribute

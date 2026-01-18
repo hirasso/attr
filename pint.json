@@ -1,0 +1,13 @@
+{
+  "preset": "psr12",
+  "rules": {
+    "array_syntax": { "syntax": "short" },
+    "simplified_null_return": true,
+    "array_indentation": true,
+    "native_function_invocation": {
+      "include": ["@all"],
+      "scope": "all",
+      "strict": true
+    }
+  }
+}
