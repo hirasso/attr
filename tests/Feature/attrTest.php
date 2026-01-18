@@ -147,3 +147,10 @@
     ]);
     \expect($result)->toBe(' data-float="1.3" ');
 });
+
+\test('does not double-encode values', function () {
+    $result = \attr([
+        'value' => '&amp; &lt; &gt; &quot; &#039;',
+    ]);
+    \expect($result)->toBe(' value="&amp; &lt; &gt; &quot; &#039;" ');
+});

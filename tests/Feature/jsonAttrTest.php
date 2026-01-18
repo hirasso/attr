@@ -33,3 +33,10 @@
     \expect(\jsonAttr(null))->toBe('');
     \expect(\jsonAttr(false))->toBe('');
 });
+
+\test('does not double-encode values', function () {
+    $result = \jsonAttr([
+        'encoded' => '&amp; &lt; &gt; &quot; &#039;',
+    ]);
+    \expect($result)->toBe('{&quot;encoded&quot;:&quot;&amp; &lt; &gt; &quot; &#039;&quot;}');
+});
