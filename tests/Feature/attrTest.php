@@ -91,11 +91,6 @@
     \attr(['foo' => ['foo' => 'bar']]);
 })->throws(InvalidArgumentException::class);
 
-\test('handles style strings', function () {
-    $result = \attr(['style' => 'backround: red;']);
-    \expect($result)->toBe(' style="backround: red;" ');
-});
-
 \test('escapes attributes', function () {
     $malicious = \getMaliciousAttributeValue();
 
@@ -146,4 +141,11 @@
         'data-float' => 1.3,
     ]);
     \expect($result)->toBe(' data-float="1.3" ');
+});
+
+\test('does not double-encode values', function () {
+    $result = \attr([
+        'value' => '&amp; &lt; &gt; &quot; &#039;',
+    ]);
+    \expect($result)->toBe(' value="&amp; &lt; &gt; &quot; &#039;" ');
 });
