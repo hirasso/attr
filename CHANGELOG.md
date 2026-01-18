@@ -1,5 +1,20 @@
 # Changelog
 
+## 4.0.0
+
+### Major Changes
+
+- 078da1c: Do not convert numeric strings to `int|float` in `jsonAttr()`
+- 078da1c: Do not double-encode JSON – instead, use native `json_encode` flags and `htmlspecialchars`
+- 078da1c: Always return strings from the `attr()` and `jsonAttr()` functions
+- a06033d: Throw if `jsonAttr()` encounters an error
+
+### Patch Changes
+
+- 7cb9a44: Add tests for double-encoding prevention
+- a06033d: Where possible, prefer named over numeric entities in `jsonAttr()`
+- e4e2589: Use scoped `collect` function for `illuminate/collections`
+
 ## 3.0.2
 
 ### Patch Changes
