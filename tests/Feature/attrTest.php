@@ -149,3 +149,13 @@
     ]);
     \expect($result)->toBe(' value="&amp; &lt; &gt; &quot; &#039;" ');
 });
+
+\test('encodes single quotes', function () {
+    $result = \attr(['value' => "'"]);
+    \expect($result)->toBe(' value="&#039;" ');
+})->only();
+
+\test('encodes double quotes', function () {
+    $result = \attr(['value' => "\""]);
+    \expect($result)->toBe(' value="&quot;" ');
+})->only();
