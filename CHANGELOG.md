@@ -1,5 +1,20 @@
 # Changelog
 
+## 4.1.0
+
+### Minor Changes
+
+- cb5cf62: New fluent API via `Attr\Builder`:
+
+  ```php
+  <button <?= attr()
+      ->set('type', 'button')
+      ->class('border p-3')
+      ->class('bg-blue-600', $isActive)
+      ->style('--highlight', 'red')
+      ->aria('expanded', 'false') ?>>
+  ```
+
 ## 4.0.0
 
 ### Major Changes
