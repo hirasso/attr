@@ -1,19 +1,19 @@
 <?php
 
-test('generates an attribute string', function () {
-    $result = attr(['class' => 'border border-red bg-black']);
-    expect($result)->toBe(' class="border border-red bg-black" ');
+\test('generates an attribute string', function () {
+    $result = \attr(['class' => 'border border-red bg-black']);
+    \expect($result)->toBe(' class="border border-red bg-black" ');
 });
 
-test('supports boolean attributes', function () {
-    $result = attr([
+\test('supports boolean attributes', function () {
+    $result = \attr([
         'data-current' => true,
     ]);
-    expect($result)->toBe(' data-current ');
+    \expect($result)->toBe(' data-current ');
 });
 
-test('strips attributes that are exactly false or null', function () {
-    $result = attr([
+\test('strips attributes that are exactly false or null', function () {
+    $result = \attr([
         'data-string-numeric' => '0',
         'data-string-empty' => '',
         'data-string-space' => ' ',
@@ -24,11 +24,11 @@ test('strips attributes that are exactly false or null', function () {
             'bg-red' => false,
         ],
     ]);
-    expect($result)->toBe(' data-string-numeric="0" data-string-empty="" data-string-space=" " data-int-zero="0" ');
+    \expect($result)->toBe(' data-string-numeric="0" data-string-empty="" data-string-space=" " data-int-zero="0" ');
 });
 
-test('returns an empty string if all attributes are null or false', function () {
-    $result = attr([
+\test('returns an empty string if all attributes are null or false', function () {
+    $result = \attr([
         'foo' => false,
         'class' => [
             'bg-red' => null,
@@ -37,19 +37,19 @@ test('returns an empty string if all attributes are null or false', function () 
             'font-weight' => false,
         ],
     ]);
-    expect($result)->toBe('');
+    \expect($result)->toBe('');
 });
 
-test('handles strings for style and class', function () {
-    $result = attr([
+\test('handles strings for style and class', function () {
+    $result = \attr([
         'class' => 'border border-red',
         'style' => 'color: black;',
     ]);
-    expect($result)->toBe(' class="border border-red" style="color: black;" ');
+    \expect($result)->toBe(' class="border border-red" style="color: black;" ');
 });
 
-test('handles arrays for style and class', function () {
-    $result = attr([
+\test('handles arrays for style and class', function () {
+    $result = \attr([
         'class' => [
             'border border-red' => true,
             'hidden' => false,
@@ -60,90 +60,90 @@ test('handles arrays for style and class', function () {
             'border' => false,
         ],
     ]);
-    expect($result)->toBe(' class="border border-red" style="color: black; background: white" ');
+    \expect($result)->toBe(' class="border border-red" style="color: black; background: white" ');
 });
 
-test('throws when provided with a list like attr(["foo", "bar", ...])', function () {
+\test('throws when provided with a list like attr(["foo", "bar", ...])', function () {
     // @phpstan-ignore argument.type
-    attr(['foo', 'bar']);
+    \attr(['foo', 'bar']);
 })->throws(InvalidArgumentException::class);
 
-test('throws when provided with a non-associative array for the "style" attribute', function () {
+\test('throws when provided with a non-associative array for the "style" attribute', function () {
     // @phpstan-ignore argument.type
-    attr(['style' => ['foo', 'bar']]);
+    \attr(['style' => ['foo', 'bar']]);
 })->throws(InvalidArgumentException::class);
 
-test('throws when provided with a non-associative array for the "class" attribute', function () {
+\test('throws when provided with a non-associative array for the "class" attribute', function () {
     // @phpstan-ignore argument.type
-    attr(['class' => ['foo', 'bar']]);
+    \attr(['class' => ['foo', 'bar']]);
 })->throws(InvalidArgumentException::class);
 
-test('throws when provided with a nested array for any attribute', function () {
+\test('throws when provided with a nested array for any attribute', function () {
     // @phpstan-ignore argument.type
-    attr([
+    \attr([
         'class' => [
             'foo' => ['bar'],
         ],
     ]);
 })->throws(InvalidArgumentException::class);
 
-test('throws when provided with an array for any other attribute then "style" or "class"', function () {
-    attr(['foo' => ['foo' => 'bar']]);
+\test('throws when provided with an array for any other attribute then "style" or "class"', function () {
+    \attr(['foo' => ['foo' => 'bar']]);
 })->throws(InvalidArgumentException::class);
 
-test('handles style strings', function () {
-    $result = attr(['style' => 'backround: red;']);
-    expect($result)->toBe(' style="backround: red;" ');
+\test('handles style strings', function () {
+    $result = \attr(['style' => 'backround: red;']);
+    \expect($result)->toBe(' style="backround: red;" ');
 });
 
-test('escapes attributes', function () {
-    $malicious = getMaliciousAttributeValue();
+\test('escapes attributes', function () {
+    $malicious = \getMaliciousAttributeValue();
 
-    $result = attr(['value' => $malicious]);
-    expect($result)->toBe(' value="&quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;" ');
+    $result = \attr(['value' => $malicious]);
+    \expect($result)->toBe(' value="&quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;" ');
 
-    $result = attr(['class' => [$malicious => true]]);
-    expect($result)->toBe(' class="&quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;" ');
+    $result = \attr(['class' => [$malicious => true]]);
+    \expect($result)->toBe(' class="&quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;" ');
 });
 
-test('escapes style attributes', function () {
-    $malicious = getMaliciousAttributeValue();
+\test('escapes style attributes', function () {
+    $malicious = \getMaliciousAttributeValue();
 
-    $result = attr(['style' => ['color' => $malicious]]);
-    expect($result)->toBe(' style="color: &quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;" ');
+    $result = \attr(['style' => ['color' => $malicious]]);
+    \expect($result)->toBe(' style="color: &quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;" ');
 
-    $result = attr(['style' => [$malicious => 'red']]);
-    expect($result)->toBe(' style="&quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;: red" ');
+    $result = \attr(['style' => [$malicious => 'red']]);
+    \expect($result)->toBe(' style="&quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;: red" ');
 });
 
-test('throws if provided with boolean true for nested style values', function () {
-    expect(attr([
+\test('throws if provided with boolean true for nested style values', function () {
+    \expect(\attr([
         'style' => [
             'background' => true,
         ],
     ]));
 })->throws(InvalidArgumentException::class);
 
-test('throws if provided with a string for nested class values', function () {
-    expect(attr([
+\test('throws if provided with a string for nested class values', function () {
+    \expect(\attr([
         'class' => [
             'bg-green' => 'yes',
         ],
     ]));
 })->throws(InvalidArgumentException::class);
 
-test('supports colons in keys and values', function () {
-    $result = attr([
+\test('supports colons in keys and values', function () {
+    $result = \attr([
         'class' => 'hidden md:block',
         'x-data' => '{open: false}',
         ':class' => '{"bg-red": open}',
     ]);
-    expect($result)->toBe(' class="hidden md:block" x-data="{open: false}" :class="{&quot;bg-red&quot;: open}" ');
+    \expect($result)->toBe(' class="hidden md:block" x-data="{open: false}" :class="{&quot;bg-red&quot;: open}" ');
 });
 
-test('supports floats as values', function () {
-    $result = attr([
+\test('supports floats as values', function () {
+    $result = \attr([
         'data-float' => 1.3,
     ]);
-    expect($result)->toBe(' data-float="1.3" ');
+    \expect($result)->toBe(' data-float="1.3" ');
 });

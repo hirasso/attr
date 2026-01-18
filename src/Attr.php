@@ -12,6 +12,20 @@ namespace Hirasso\Attr;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
+/**
+ * Create a collection from the given value.
+ *
+ * @template TKey of array-key
+ * @template TValue
+ *
+ * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>|null  $value
+ * @return \Illuminate\Support\Collection<TKey, TValue>
+ */
+function collect($value = []): Collection
+{
+    return new Collection($value);
+}
+
 final readonly class Attr
 {
     /**
@@ -37,21 +51,21 @@ final readonly class Attr
      */
     private static function validate(Collection $attrs): Collection
     {
-        if ($attrs->keys()->some(fn ($key) => is_int($key))) {
+        if ($attrs->keys()->some(fn ($key) => \is_int($key))) {
             throw new InvalidArgumentException('All attribute keys must be strings');
         }
 
         $attrs->each(function ($value, $key) {
-            if (! is_array($value)) {
+            if (! \is_array($value)) {
                 return;
             }
-            if (! in_array($key, ['class', 'style'])) {
+            if (! \in_array($key, ['class', 'style'])) {
                 throw new InvalidArgumentException("Only 'class' and 'style' can contain an array");
             }
 
             $nestedAttrs = collect($value);
 
-            if ($nestedAttrs->keys()->some(fn ($key) => is_int($key))) {
+            if ($nestedAttrs->keys()->some(fn ($key) => \is_int($key))) {
                 throw new InvalidArgumentException('All attribute keys must be strings');
             }
 
@@ -62,12 +76,12 @@ final readonly class Attr
             }
 
             if ($key === 'class') {
-                if (collect($value)->contains(fn ($nestedValue) => is_string($nestedValue))) {
+                if (collect($value)->contains(fn ($nestedValue) => \is_string($nestedValue))) {
                     throw new InvalidArgumentException("Values for the 'class' array may not be strings");
                 }
             }
 
-            if (collect($value)->contains(fn ($nestedValue) => is_array($nestedValue))) {
+            if (collect($value)->contains(fn ($nestedValue) => \is_array($nestedValue))) {
                 throw new InvalidArgumentException("Nested array provided for for $key");
             }
         });
@@ -82,11 +96,11 @@ final readonly class Attr
     {
         return $attrs->map(fn (array|string|bool|null|int|float $value, string $key) => match (true) {
             /** the key is 'style', the value is an array */
-            $key === 'style' && is_array($value) => self::arrayToStyleString($value),
+            $key === 'style' && \is_array($value) => self::arrayToStyleString($value),
             /** the key is 'class', the value is an array */
-            $key === 'class' && is_array($value) => self::arrayToClassList($value),
+            $key === 'class' && \is_array($value) => self::arrayToClassList($value),
             /** the value is a string */
-            is_string($value) => self::encode($value),
+            \is_string($value) => self::encode($value),
             default => $value
         })
             ->filter(fn ($value) => ! self::isNullOrFalse($value))
@@ -121,7 +135,7 @@ final readonly class Attr
         }
         $classList = $values->keys()->unique()->join(' ');
 
-        return self::encode(trim($classList));
+        return self::encode(\trim($classList));
     }
 
     /**
@@ -147,7 +161,7 @@ final readonly class Attr
     private static function encode(
         string $html
     ): string {
-        return htmlentities(
+        return \htmlentities(
             string: $html,
             flags: ENT_QUOTES,
             encoding: 'UTF-8',
@@ -164,12 +178,12 @@ final readonly class Attr
             return '';
         }
 
-        $json = json_encode(
+        $json = \json_encode(
             value: $value,
             flags: JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR
         );
 
-        return htmlspecialchars(
+        return \htmlspecialchars(
             string: $json,
             flags: ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
             encoding: 'UTF-8',
