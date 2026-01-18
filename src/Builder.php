@@ -14,7 +14,7 @@ use Stringable;
 /**
  * Fluent builder for HTML attributes
  */
-final class AttrBuilder implements Stringable
+final class Builder implements Stringable
 {
     /** @var array<string, mixed> Raw attributes from merge() */
     private array $rawAttributes = [];

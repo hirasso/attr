@@ -160,9 +160,9 @@
     \expect($result)->toBe(' value="&quot;" ');
 });
 
-\test('returns AttrBuilder for chaining', function () {
+\test('returns Builder for chaining', function () {
     $result = \attr(['type' => 'button']);
-    \expect($result)->toBeInstanceOf(\Hirasso\Attr\AttrBuilder::class);
+    \expect($result)->toBeInstanceOf(\Hirasso\Attr\Builder::class);
 });
 
 \test('supports chaining after array initialization', function () {

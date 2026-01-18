@@ -1,14 +1,14 @@
 <?php
 
-use Hirasso\Attr\AttrBuilder;
+use Hirasso\Attr\Builder;
 
 \test('creates empty attributes', function () {
-    $result = AttrBuilder::make()->toString();
+    $result = Builder::make()->toString();
     \expect($result)->toBe('');
 });
 
 \test('sets basic attributes', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->set('type', 'button')
         ->set('id', 'my-btn')
         ->toString();
@@ -17,7 +17,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('sets boolean attributes', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->set('disabled', true)
         ->set('readonly', true)
         ->toString();
@@ -26,7 +26,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('set ignores null and false values', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->set('data-active', 'yes')
         ->set('data-null', null)
         ->set('data-false', false)
@@ -36,7 +36,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('adds single class', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->class('border')
         ->toString();
 
@@ -44,7 +44,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('adds multiple classes in one call', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->class('border p-3 rounded')
         ->toString();
 
@@ -52,7 +52,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('chains multiple class calls', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->class('border')
         ->class('p-3')
         ->class('rounded')
@@ -65,7 +65,7 @@ use Hirasso\Attr\AttrBuilder;
     $isActive = true;
     $isHidden = false;
 
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->class('base')
         ->class('active', when: $isActive)
         ->class('hidden', when: $isHidden)
@@ -75,7 +75,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('deduplicates classes', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->class('border')
         ->class('border p-3')
         ->class('border')
@@ -85,7 +85,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('adds single style', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->style('color', 'red')
         ->toString();
 
@@ -93,7 +93,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('chains multiple style calls', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->style('color', 'red')
         ->style('background', 'white')
         ->toString();
@@ -102,7 +102,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('conditional style with when parameter', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->style('color', 'red')
         ->style('background', false)
         ->toString();
@@ -113,7 +113,7 @@ use Hirasso\Attr\AttrBuilder;
 \test('style ignores null values', function () {
     $color = null;
 
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->style('color', $color)
         ->style('background', 'white')
         ->toString();
@@ -122,7 +122,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('supports CSS custom properties', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->style('--primary-color', '#ff0000')
         ->style('--spacing', '1rem')
         ->toString();
@@ -131,7 +131,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('supports numeric style values', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->style('opacity', 0.5)
         ->style('z-index', 100)
         ->toString();
@@ -140,7 +140,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('data attributes via set', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->set('data-id', 123)
         ->set('data-active', true)
         ->set('data-name', 'test')
@@ -150,7 +150,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('aria helper adds aria- prefix', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->aria('label', 'Close button')
         ->aria('hidden', 'true')
         ->toString();
@@ -159,7 +159,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('aria with conditional when parameter', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->aria('expanded', 'true', when: true)
         ->aria('disabled', 'true', when: false)
         ->toString();
@@ -168,7 +168,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('aria ignores empty values', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         // @phpstan-ignore argument.type
         ->aria('label', '')
         ->aria('description', '  ')
@@ -179,7 +179,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('combines all attribute types', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->set('type', 'button')
         ->class('btn btn-primary')
         ->class('disabled', when: true)
@@ -192,7 +192,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('merge accepts array of attributes', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->merge([
             'type' => 'button',
             'disabled' => true,
@@ -203,7 +203,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('merge handles class array', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->merge([
             'class' => [
                 'border' => true,
@@ -217,7 +217,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('merge handles class string', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->merge([
             'class' => 'border p-3',
         ])
@@ -227,7 +227,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('merge handles style array', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->merge([
             'style' => [
                 'color' => 'red',
@@ -241,7 +241,7 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('toArray returns attributes array', function () {
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->set('type', 'button')
         ->class('btn')
         ->style('color', 'red')
@@ -255,12 +255,12 @@ use Hirasso\Attr\AttrBuilder;
 });
 
 \test('implements Stringable', function () {
-    $builder = AttrBuilder::make()->set('type', 'button');
+    $builder = Builder::make()->set('type', 'button');
 
     \expect((string) $builder)->toBe(' type="button" ');
 });
 
-\test('attr() helper returns AttrBuilder', function () {
+\test('attr() helper returns Builder', function () {
     $result = \attr()
         ->set('type', 'button')
         ->class('btn')
@@ -272,7 +272,7 @@ use Hirasso\Attr\AttrBuilder;
 \test('escapes attribute values', function () {
     $malicious = \getMaliciousAttributeValue();
 
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->set('value', $malicious)
         ->toString();
 
@@ -282,7 +282,7 @@ use Hirasso\Attr\AttrBuilder;
 \test('escapes class names', function () {
     $malicious = \getMaliciousAttributeValue();
 
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->class($malicious)
         ->toString();
 
@@ -292,7 +292,7 @@ use Hirasso\Attr\AttrBuilder;
 \test('escapes style values', function () {
     $malicious = \getMaliciousAttributeValue();
 
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->style('color', $malicious)
         ->toString();
 
@@ -304,7 +304,7 @@ use Hirasso\Attr\AttrBuilder;
     $isDisabled = false;
     $variant = 'primary';
 
-    $result = AttrBuilder::make()
+    $result = Builder::make()
         ->set('type', 'submit')
         // @phpstan-ignore booleanOr.leftAlwaysTrue, booleanOr.rightAlwaysFalse
         ->set('disabled', $isLoading || $isDisabled)

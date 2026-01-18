@@ -2,7 +2,7 @@
 "attr": minor
 ---
 
-New fluent API via `AttrBuilder`:
+New fluent API via `Attr\Builder`:
 
 ```php
 <button <?= attr()

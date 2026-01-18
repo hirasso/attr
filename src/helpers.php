@@ -6,7 +6,7 @@
  */
 
 use Hirasso\Attr\Attr;
-use Hirasso\Attr\AttrBuilder;
+use Hirasso\Attr\Builder;
 
 if (! \function_exists('attr')) {
 
@@ -28,9 +28,9 @@ if (! \function_exists('attr')) {
      *      style?: string|array<string, string|int|float|false|null>,
      * }|array<string, string|int|float|bool|null>|null $attributes
      */
-    function attr(?array $attributes = null): AttrBuilder
+    function attr(?array $attributes = null): Builder
     {
-        $builder = AttrBuilder::make();
+        $builder = Builder::make();
 
         if ($attributes !== null) {
             $builder->merge($attributes);
