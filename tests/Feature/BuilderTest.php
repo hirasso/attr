@@ -336,3 +336,46 @@ use Hirasso\Attr\Builder;
     \expect($result)->not->toContain('btn-secondary');
     \expect($result)->not->toContain('cursor-not-allowed');
 });
+
+\test('merge class string with fluent class', function () {
+    $result = Builder::make()
+        ->merge(['class' => 'from-merge'])
+        ->class('from-fluent')
+        ->toString();
+
+    \expect($result)->toBe(' class="from-merge from-fluent" ');
+});
+
+\test('merge class array with fluent class', function () {
+    $result = Builder::make()
+        ->merge(['class' => ['from-merge' => true, 'inactive' => false]])
+        ->class('from-fluent')
+        ->toArray();
+
+    \expect($result['class'])->toBe([
+        'from-merge' => true,
+        'inactive' => false,
+        'from-fluent' => true,
+    ]);
+});
+
+\test('merge style string with fluent style', function () {
+    $result = Builder::make()
+        ->merge(['style' => 'color: red'])
+        ->style('background', 'blue')
+        ->toString();
+
+    \expect($result)->toBe(' style="color: red; background: blue" ');
+});
+
+\test('merge style array with fluent style', function () {
+    $result = Builder::make()
+        ->merge(['style' => ['color' => 'red']])
+        ->style('background', 'blue')
+        ->toArray();
+
+    \expect($result['style'])->toBe([
+        'color' => 'red',
+        'background' => 'blue',
+    ]);
+});
