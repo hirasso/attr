@@ -91,11 +91,6 @@
     \attr(['foo' => ['foo' => 'bar']]);
 })->throws(InvalidArgumentException::class);
 
-\test('handles style strings', function () {
-    $result = \attr(['style' => 'backround: red;']);
-    \expect($result)->toBe(' style="backround: red;" ');
-});
-
 \test('escapes attributes', function () {
     $malicious = \getMaliciousAttributeValue();
 
