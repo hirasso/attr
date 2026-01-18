@@ -39,7 +39,8 @@
     "test:watch": "./vendor/bin/pest --watch",
     "test:coverage": "php -d zend_extension=/Applications/Herd.app/Contents/Resources/xdebug/xdebug-83-arm64.so -d xdebug.mode=coverage ./vendor/bin/pest --coverage --coverage-html ./tests/reports",
     "test:ci": "./vendor/bin/pest --coverage-clover coverage.xml",
-    "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G"
+    "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G",
+    "post-install-cmd": ["pnpm install"]
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
