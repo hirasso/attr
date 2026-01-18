@@ -17,9 +17,9 @@ if (! function_exists('attr')) {
      *      style?: string|array<string, string|int|float|false|null>,
      * }|array<string, string|int|float|bool|null> $attributes
      */
-    function attr(array $attributes): string
+    function attr(?array $attributes = null): string
     {
-        return Attr::attr($attributes);
+        return Attr::attr($attributes ?? []);
     }
 }
 
@@ -28,8 +28,8 @@ if (! function_exists('jsonAttr')) {
     /**
      * Convert an object or array to JSON that's safe to be used inside a HTMLElement attribute
      */
-    function jsonAttr(array|object|null|false $value): ?string
+    function jsonAttr(array|object|null|false $value = null): string
     {
-        return Attr::jsonAttr($value);
+        return Attr::jsonAttr($value ?? null);
     }
 }

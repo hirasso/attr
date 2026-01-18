@@ -86,7 +86,7 @@ final readonly class Attr
             /** the key is 'class', the value is an array */
             $key === 'class' && is_array($value) => self::arrayToClassList($value),
             /** the value is a string */
-            is_string($value) => self::safeHtmlEntities($value),
+            is_string($value) => self::encode($value),
             default => $value
         })
             ->filter(fn ($value) => ! self::isNullOrFalse($value))
@@ -121,7 +121,7 @@ final readonly class Attr
         }
         $classList = $values->keys()->unique()->join(' ');
 
-        return self::safeHtmlEntities(trim($classList));
+        return self::encode(trim($classList));
     }
 
     /**
@@ -133,7 +133,7 @@ final readonly class Attr
         $directives = collect($arr)
             ->reject(fn ($value) => $value === null || $value === false)
             ->map(function ($value, $property) {
-                return self::safeHtmlEntities("$property: ".(string) $value);
+                return self::encode("$property: ".(string) $value);
             });
 
         return $directives->isEmpty()
@@ -142,33 +142,37 @@ final readonly class Attr
     }
 
     /**
-     * Converts entities, while preserving already-encoded entities.
-     * Borrowed from the WordPress core function
-     *
-     * @see https://developer.wordpress.org/reference/functions/htmlentities2/
+     * Convert entities while preserving already-encoded entities
      */
-    private static function safeHtmlEntities(
-        string $text
+    private static function encode(
+        string $html
     ): string {
-        $translationTable = get_html_translation_table(HTML_ENTITIES, ENT_QUOTES);
-        $translationTable[chr(38)] = '&';
-
-        return preg_replace(
-            pattern: '/&(?![A-Za-z]{0,4}\w{2,3};|#[0-9]{2,3};)/',
-            replacement: '&amp;',
-            subject: strtr($text, $translationTable)
+        return htmlentities(
+            string: $html,
+            flags: ENT_QUOTES,
+            encoding: 'UTF-8',
+            double_encode: false
         );
     }
 
     /**
      * Convert an array or object to a JSON string that's safe to be used in an attribute
      */
-    public static function jsonAttr(array|object|null|false $value): ?string
+    public static function jsonAttr(array|object|null|false $value): string
     {
         if (empty($value)) {
-            return null;
+            return '';
         }
 
-        return self::safeHtmlEntities(json_encode($value, JSON_NUMERIC_CHECK));
+        return json_encode(
+            $value,
+            JSON_UNESCAPED_UNICODE |
+            JSON_UNESCAPED_SLASHES |
+            JSON_THROW_ON_ERROR |
+            JSON_HEX_QUOT |
+            JSON_HEX_TAG |
+            JSON_HEX_AMP |
+            JSON_HEX_APOS
+        );
     }
 }
