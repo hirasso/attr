@@ -6,20 +6,37 @@
  */
 
 use Hirasso\Attr\Attr;
+use Hirasso\Attr\AttrBuilder;
 
 if (! \function_exists('attr')) {
 
     /**
-     * Convert an array of conditional attributes into a string of HTMLElement attributes.
+     * Create a fluent attribute builder, optionally pre-filled with attributes.
+     *
+     * Usage:
+     *   // Array syntax (original)
+     *   attr(['type' => 'button', 'class' => 'btn'])
+     *
+     *   // Fluent syntax
+     *   attr()->set('type', 'button')->class('btn')
+     *
+     *   // Combined - array + chaining
+     *   attr(['type' => 'button'])->class('active', when: $isActive)
      *
      * @param array{
      *      class?: string|array<string, int|bool|null>,
      *      style?: string|array<string, string|int|float|false|null>,
-     * }|array<string, string|int|float|bool|null> $attributes
+     * }|array<string, string|int|float|bool|null>|null $attributes
      */
-    function attr(?array $attributes = null): string
+    function attr(?array $attributes = null): AttrBuilder
     {
-        return Attr::attr($attributes ?? []);
+        $builder = AttrBuilder::make();
+
+        if ($attributes !== null) {
+            $builder->merge($attributes);
+        }
+
+        return $builder;
     }
 }
 
