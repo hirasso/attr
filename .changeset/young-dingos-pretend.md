@@ -2,4 +2,4 @@
 "attr": patch
 ---
 
-Do not rely on the global collect function from `illuminate/collections`
+Use scoped `collect` function for `illuminate/collections`

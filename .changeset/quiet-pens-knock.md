@@ -2,4 +2,4 @@
 "attr": patch
 ---
 
-Use named instead of numeric entities in `jsonAttr()`
+Where possible, prefer named over numeric entities in `jsonAttr()`

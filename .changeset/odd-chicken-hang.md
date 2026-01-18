@@ -2,4 +2,4 @@
 "attr": major
 ---
 
-Do not convert numberic strings to `int|float` in `jsonAttr()`
+Do not convert numeric strings to `int|float` in `jsonAttr()`
