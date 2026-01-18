@@ -11,10 +11,10 @@ test('generates a valid json attribute from an array', function () {
         'amp' => 'a & b',
         'apos' => "it's",
     ]);
-    expect($result)->toBe('{"foo":"bar","bool":true,"int":2,"float":1.2,"numeric":"2.5","xss":"\u003Cscript\u003Ealert(\u0022test\u0022)\u003C/script\u003E","amp":"a \u0026 b","apos":"it\u0027s"}');
+    expect($result)->toBe('{&quot;foo&quot;:&quot;bar&quot;,&quot;bool&quot;:true,&quot;int&quot;:2,&quot;float&quot;:1.2,&quot;numeric&quot;:&quot;2.5&quot;,&quot;xss&quot;:&quot;&lt;script&gt;alert(\&quot;test\&quot;)&lt;/script&gt;&quot;,&quot;amp&quot;:&quot;a &amp; b&quot;,&quot;apos&quot;:&quot;it&apos;s&quot;}');
 });
 
-test('generates an escaped json attribute from an object', function () {
+test('generates a valid json attribute from an object', function () {
     $result = jsonAttr((object) [
         'foo' => 'bar',
         'bool' => true,
@@ -25,7 +25,7 @@ test('generates an escaped json attribute from an object', function () {
         'amp' => 'a & b',
         'apos' => "it's",
     ]);
-    expect($result)->toBe('{"foo":"bar","bool":true,"int":2,"float":1.2,"numeric":"2.5","xss":"\u003Cscript\u003Ealert(\u0022test\u0022)\u003C/script\u003E","amp":"a \u0026 b","apos":"it\u0027s"}');
+    expect($result)->toBe('{&quot;foo&quot;:&quot;bar&quot;,&quot;bool&quot;:true,&quot;int&quot;:2,&quot;float&quot;:1.2,&quot;numeric&quot;:&quot;2.5&quot;,&quot;xss&quot;:&quot;&lt;script&gt;alert(\&quot;test\&quot;)&lt;/script&gt;&quot;,&quot;amp&quot;:&quot;a &amp; b&quot;,&quot;apos&quot;:&quot;it&apos;s&quot;}');
 });
 
 test('returns an empty string if the value is empty', function () {
