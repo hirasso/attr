@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.2.0
+
+### Minor Changes
+
+- b437b65: Switch License to MIT
+
 ## 4.1.0
 
 ### Minor Changes
