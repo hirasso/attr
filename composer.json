@@ -2,7 +2,7 @@
   "name": "hirasso/attr",
   "description": "A tiny HTML attribute generator written in PHP. Great for projects using tailwindcss and Alpine.js 🎡",
   "type": "library",
-  "license": "GPL-3.0-or-later",
+  "license": "MIT",
   "authors": [
     {
       "name": "Rasso Hilber",
