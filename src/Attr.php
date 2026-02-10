@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Hirasso\Attr;
 
+use Hirasso\Attr\Internal\Arr;
 use InvalidArgumentException;
 
 final readonly class Attr
@@ -34,7 +35,7 @@ final readonly class Attr
      */
     private static function validate(array $attrs): void
     {
-        if (\count(\array_filter(\array_keys($attrs), fn ($key) => \is_int($key))) > 0) {
+        if (Arr::some(\array_keys($attrs), fn ($key) => \is_int($key))) {
             throw new InvalidArgumentException('All attribute keys must be strings');
         }
 
@@ -46,26 +47,26 @@ final readonly class Attr
                 throw new InvalidArgumentException("Only 'class' and 'style' can contain an array");
             }
 
-            if ($key === 'style' && \count(\array_filter(\array_keys($value), fn ($k) => \is_int($k))) > 0) {
+            if ($key === 'style' && Arr::some(\array_keys($value), fn ($k) => \is_int($k))) {
                 throw new InvalidArgumentException('All attribute keys must be strings');
             }
 
             if ($key === 'style') {
-                if (\count(\array_filter($value, fn ($nested) => $nested === true)) > 0) {
+                if (Arr::some($value, fn ($nested) => $nested === true)) {
                     throw new InvalidArgumentException('Nested style properties must never be true');
                 }
             }
 
             if ($key === 'class') {
-                if (\count(\array_filter($value, fn ($nestedValue, $nestedKey) => \is_string($nestedKey) && \is_string($nestedValue), ARRAY_FILTER_USE_BOTH)) > 0) {
+                if (Arr::some($value, fn ($nestedValue, $nestedKey) => \is_string($nestedKey) && \is_string($nestedValue))) {
                     throw new InvalidArgumentException("Values for the 'class' array may not be strings");
                 }
-                if (\count(\array_filter($value, fn ($nestedValue, $nestedKey) => \is_int($nestedKey) && ! \is_string($nestedValue), ARRAY_FILTER_USE_BOTH)) > 0) {
+                if (Arr::some($value, fn ($nestedValue, $nestedKey) => \is_int($nestedKey) && ! \is_string($nestedValue))) {
                     throw new InvalidArgumentException("Numeric keys for the 'class' array must have string values");
                 }
             }
 
-            if (\count(\array_filter($value, fn ($nestedValue) => \is_array($nestedValue))) > 0) {
+            if (Arr::some($value, fn ($nestedValue) => \is_array($nestedValue))) {
                 throw new InvalidArgumentException("Nested array provided for for $key");
             }
         }
@@ -78,18 +79,15 @@ final readonly class Attr
      */
     private static function transform(array $attrs): array
     {
-        $mapped = [];
-        foreach ($attrs as $key => $value) {
-            $mapped[$key] = match (true) {
-                /** the key is 'style', the value is an array */
-                $key === 'style' && \is_array($value) => self::arrayToStyleString($value),
-                /** the key is 'class', the value is an array */
-                $key === 'class' && \is_array($value) => self::arrayToClassList($value),
-                /** the value is a string */
-                \is_string($value) => self::encode($value),
-                default => $value
-            };
-        }
+        $mapped = Arr::mapWithKeys($attrs, fn ($value, $key) => match (true) {
+            /** the key is 'style', the value is an array */
+            $key === 'style' && \is_array($value) => self::arrayToStyleString($value),
+            /** the key is 'class', the value is an array */
+            $key === 'class' && \is_array($value) => self::arrayToClassList($value),
+            /** the value is a string */
+            \is_string($value) => self::encode($value),
+            default => $value
+        });
 
         $filtered = \array_filter($mapped, fn ($value) => ! self::isNullOrFalse($value));
 
@@ -125,7 +123,7 @@ final readonly class Attr
             return null;
         }
 
-        $classList = \array_map(fn ($v, $k) => \is_int($k) ? $v : $k, $values, \array_keys($values));
+        $classList = Arr::mapWithKeys($values, fn ($v, $k) => \is_int($k) ? $v : $k);
         $classList = \implode(' ', \array_unique($classList));
 
         return self::encode(\trim($classList));
