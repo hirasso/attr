@@ -7,7 +7,7 @@ Allow numerical keys for 'class' arrays:
 ```php
 attr([
   'class' => [
-    'foo bar',
+    'foo bar', // <-- now supported
     'baz' => true,
     'qux' => false
   ]
