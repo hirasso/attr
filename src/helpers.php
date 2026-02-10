@@ -24,7 +24,7 @@ if (! \function_exists('attr')) {
      *   attr(['type' => 'button'])->class('active', when: $isActive)
      *
      * @param array{
-     *      class?: string|array<string, int|bool|null>,
+     *      class?: string|array<int|string, string|int|bool|null>,
      *      style?: string|array<string, string|int|float|false|null>,
      * }|array<string, string|int|float|bool|null>|null $attributes
      */

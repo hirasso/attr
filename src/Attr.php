@@ -65,7 +65,7 @@ final readonly class Attr
 
             $nestedAttrs = collect($value);
 
-            if ($nestedAttrs->keys()->some(fn ($key) => \is_int($key))) {
+            if ($key === 'style' && $nestedAttrs->keys()->some(fn ($key) => \is_int($key))) {
                 throw new InvalidArgumentException('All attribute keys must be strings');
             }
 
@@ -76,8 +76,11 @@ final readonly class Attr
             }
 
             if ($key === 'class') {
-                if (collect($value)->contains(fn ($nestedValue) => \is_string($nestedValue))) {
+                if (collect($value)->contains(fn ($nestedValue, $nestedKey) => \is_string($nestedKey) && \is_string($nestedValue))) {
                     throw new InvalidArgumentException("Values for the 'class' array may not be strings");
+                }
+                if (collect($value)->contains(fn ($nestedValue, $nestedKey) => \is_int($nestedKey) && ! \is_string($nestedValue))) {
+                    throw new InvalidArgumentException("Numeric keys for the 'class' array must have string values");
                 }
             }
 
@@ -128,12 +131,12 @@ final readonly class Attr
     private static function arrayToClassList(array $value): ?string
     {
         $values = collect($value)
-            ->filter(fn ($value) => ! self::isNullOrFalse($value));
+            ->filter(fn ($value, $key) => \is_int($key) ? \is_string($value) : ! self::isNullOrFalse($value));
 
         if ($values->isEmpty()) {
             return null;
         }
-        $classList = $values->keys()->unique()->join(' ');
+        $classList = $values->map(fn ($value, $key) => \is_int($key) ? $value : $key)->unique()->join(' ');
 
         return self::encode(\trim($classList));
     }

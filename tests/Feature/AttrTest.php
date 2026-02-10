@@ -5,6 +5,11 @@
     \expect($result)->toBe(' class="border border-red bg-black" ');
 });
 
+\test('allows numeric key, string as value for "class"', function () {
+    $result = (string) \attr(['class' => ['border border-red bg-black']]);
+    \expect($result)->toBe(' class="border border-red bg-black" ');
+});
+
 \test('supports boolean attributes', function () {
     $result = (string) \attr([
         'data-current' => true,
@@ -69,14 +74,13 @@
 })->throws(InvalidArgumentException::class);
 
 \test('throws when provided with a non-associative array for the "style" attribute', function () {
-    // @phpstan-ignore argument.type
     \attr(['style' => ['foo', 'bar']])->toString();
 })->throws(InvalidArgumentException::class);
 
-\test('throws when provided with a non-associative array for the "class" attribute', function () {
-    // @phpstan-ignore argument.type
-    \attr(['class' => ['foo', 'bar']])->toString();
-})->throws(InvalidArgumentException::class);
+\test('allows a non-associative array for the "class" attribute', function () {
+    $result = (string) \attr(['class' => ['foo', 'bar']]);
+    \expect($result)->toBe(' class="foo bar" ');
+});
 
 \test('throws when provided with a nested array for any attribute', function () {
     // @phpstan-ignore argument.type
@@ -116,6 +120,12 @@
         'style' => [
             'background' => true,
         ],
+    ])->toString();
+})->throws(InvalidArgumentException::class);
+
+\test('throws if provided with a non-string value for numeric class keys', function () {
+    \attr([
+        'class' => [true],
     ])->toString();
 })->throws(InvalidArgumentException::class);
 
