@@ -23,8 +23,7 @@
     }
   },
   "require": {
-    "php": ">=8.2",
-    "illuminate/collections": "^11 | ^12"
+    "php": ">=8.2"
   },
   "require-dev": {
     "laravel/pint": "^1.20",
