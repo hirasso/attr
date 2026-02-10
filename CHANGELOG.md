@@ -1,5 +1,22 @@
 # Changelog
 
+## 4.3.0
+
+### Minor Changes
+
+- 8c9c046: Make the package dependency free
+- cf60e61: Allow numerical keys for 'class' arrays:
+
+  ```php
+  attr([
+    'class' => [
+      'foo bar', // <-- now supported
+      'baz' => true,
+      'qux' => false
+    ]
+  ])
+  ```
+
 ## 4.2.0
 
 ### Minor Changes
