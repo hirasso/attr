@@ -23,7 +23,7 @@ Define your attributes in an associative way:
 <button <?= attr([
             'type' => 'button',
             'class' => [
-                'border border-current p-3' => true,
+                'border border-current p-3',
                 'bg-white text-black' => !$isActive,
                 'bg-blue-600 text-white' => $isActive
             ],
