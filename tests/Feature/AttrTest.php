@@ -123,6 +123,12 @@
     ])->toString();
 })->throws(InvalidArgumentException::class);
 
+\test('throws if provided with a non-string value for numeric class keys', function () {
+    \attr([
+        'class' => [true],
+    ])->toString();
+})->throws(InvalidArgumentException::class);
+
 \test('throws if provided with a string for nested class values', function () {
     \attr([
         'class' => [
