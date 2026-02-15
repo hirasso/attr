@@ -18,6 +18,11 @@ integrations = ["pest", "phpunit"]
 ambiguous-function-call = { enabled = false }
 literal-named-argument = { enabled = false }
 halstead = { effort-threshold = 7000 }
+prefer-first-class-callable = { enabled = false }
+function-name = { camel = true }
+cyclomatic-complexity = { threshold = 30 }
+kan-defect = { threshold = 2.5 }
+too-many-methods = { threshold = 12 }
 
 [analyzer]
 # Disable strict checks

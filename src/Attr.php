@@ -43,32 +43,43 @@ final readonly class Attr
             if (! \is_array($value)) {
                 continue;
             }
-            if (! \in_array($key, ['class', 'style'])) {
+            if (! \in_array($key, ['class', 'style'], true)) {
                 throw new InvalidArgumentException("Only 'class' and 'style' can contain an array");
             }
 
-            if ($key === 'style' && Arr::some(\array_keys($value), static fn ($k) => \is_int($k))) {
-                throw new InvalidArgumentException('All attribute keys must be strings');
-            }
-
             if ($key === 'style') {
-                if (Arr::some($value, static fn ($nested) => $nested === true)) {
-                    throw new InvalidArgumentException('Nested style properties must never be true');
-                }
+                self::validateStyleValue($value);
             }
 
             if ($key === 'class') {
-                if (Arr::some($value, static fn ($nestedValue, $nestedKey) => \is_string($nestedKey) && \is_string($nestedValue))) {
-                    throw new InvalidArgumentException("Values for the 'class' array may not be strings");
-                }
-                if (Arr::some($value, static fn ($nestedValue, $nestedKey) => \is_int($nestedKey) && ! \is_string($nestedValue))) {
-                    throw new InvalidArgumentException("Numeric keys for the 'class' array must have string values");
-                }
+                self::validateClassValue($value);
             }
 
             if (Arr::some($value, static fn ($nestedValue) => \is_array($nestedValue))) {
                 throw new InvalidArgumentException("Nested array provided for for {$key}");
             }
+        }
+    }
+
+    private static function validateStyleValue(array $value): void
+    {
+        if (Arr::some(\array_keys($value), static fn ($k) => \is_int($k))) {
+            throw new InvalidArgumentException('All attribute keys must be strings');
+        }
+
+        if (Arr::some($value, static fn ($nested) => $nested === true)) {
+            throw new InvalidArgumentException('Nested style properties must never be true');
+        }
+    }
+
+    private static function validateClassValue(array $value): void
+    {
+        if (Arr::some($value, static fn ($nestedValue, $nestedKey) => \is_string($nestedKey) && \is_string($nestedValue))) {
+            throw new InvalidArgumentException("Values for the 'class' array may not be strings");
+        }
+
+        if (Arr::some($value, static fn ($nestedValue, $nestedKey) => \is_int($nestedKey) && ! \is_string($nestedValue))) {
+            throw new InvalidArgumentException("Numeric keys for the 'class' array must have string values");
         }
     }
 
@@ -93,12 +104,9 @@ final readonly class Attr
 
         $result = [];
         foreach ($filtered as $key => $value) {
-            /** boolean attributes don't need a value */
-            if ($value === true) {
-                $result[$key] = (string) $key;
-            } else {
-                $result[$key] = "{$key}=\"{$value}\"";
-            }
+            $result[$key] = $value === true
+                ? (string) $key
+                : "{$key}=\"{$value}\"";
         }
 
         return $result;
@@ -168,7 +176,7 @@ final readonly class Attr
      */
     public static function jsonAttr(array|object|null|false $value): string
     {
-        if (empty($value)) {
+        if ($value === null || $value === false || $value === []) {
             return '';
         }
 
