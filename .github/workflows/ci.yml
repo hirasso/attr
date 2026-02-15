@@ -10,8 +10,34 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  php-tests:
+  mago:
+    name: Run Mago Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP with Composer cache
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4" # Or your project's version
+          coverage: none
+          tools: composer
+        env:
+          COMPOSER_ALLOW_SUPERUSER: 1
+
+      - name: Install Composer Dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run Mago
+        run: |
+          vendor/bin/mago format --dry-run
+          vendor/bin/mago lint --reporting-format=github
+          vendor/bin/mago analyze --reporting-format=github
+
+  tests:
     name: PHP ${{ matrix.php }} Tests
+    needs: mago
     runs-on: ubuntu-latest
 
     strategy:
@@ -44,25 +70,25 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
 
-  format:
-    name: Format Code
-    needs: php-tests
-    runs-on: ubuntu-latest
+  # format:
+  #   name: Format Code
+  #   needs: php-tests
+  #   runs-on: ubuntu-latest
 
-    permissions:
-      contents: write
+  #   permissions:
+  #     contents: write
 
-    steps:
-      - uses: actions/checkout@v6
+  #   steps:
+  #     - uses: actions/checkout@v6
 
-      - name: Setup Environment
-        uses: ./.github/actions/setup-environment
+  #     - name: Setup Environment
+  #       uses: ./.github/actions/setup-environment
 
-      - name: Format Code
-        run: composer format
+  #     - name: Format Code
+  #       run: composer format
 
-      - name: Commit linted files
-        uses: stefanzweifel/git-auto-commit-action@v7
-        with:
-          commit_message: Format Code
-          file_pattern: 'src/*.php tests/*.php'
+  #     - name: Commit linted files
+  #       uses: stefanzweifel/git-auto-commit-action@v7
+  #       with:
+  #         commit_message: Format Code
+  #         file_pattern: 'src/*.php tests/*.php'
