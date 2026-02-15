@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.4.0
+
+### Minor Changes
+
+- 5086df5: Use [Mago](https://mago.carthage.software/) for formatting, linting and static analysis
+
+### Patch Changes
+
+- f94d5dc: Add PHP 8.5 and 8.6 to test matrix in CI
+
 ## 4.3.0
 
 ### Minor Changes
