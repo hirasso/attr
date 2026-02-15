@@ -27,10 +27,8 @@
   },
   "require-dev": {
     "carthage-software/mago": "^1.8",
-    "laravel/pint": "^1.20",
     "pestphp/pest": "^3.7",
     "pestphp/pest-plugin-watch": "^3.0",
-    "phpstan/phpstan": "^2.1",
     "symfony/var-dumper": "^7.2"
   },
   "scripts": {
@@ -39,7 +37,7 @@
     "test:watch": "./vendor/bin/pest --watch",
     "test:coverage": "php -d zend_extension=/Applications/Herd.app/Contents/Resources/xdebug/xdebug-83-arm64.so -d xdebug.mode=coverage ./vendor/bin/pest --coverage --coverage-html ./tests/reports",
     "test:ci": "./vendor/bin/pest --coverage-clover coverage.xml",
-    "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G",
+    "analyse": "./vendor/bin/mago analyse",
     "post-install-cmd": ["pnpm install"]
   },
   "minimum-stability": "dev",

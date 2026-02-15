@@ -10,6 +10,9 @@ declare(strict_types=1);
 namespace Hirasso\Attr\Internal;
 
 /**
+ * @template TKey of array-key
+ * @template TValue
+ *
  * @internal
  */
 final class Arr
@@ -18,7 +21,7 @@ final class Arr
      * Check if any element in the array matches the callback.
      *
      * @param  array<array-key, mixed>  $array
-     * @param  callable(mixed $value, array-key $key): bool  $callback
+     * @param  (callable(TValue, TKey): bool)  $callback
      */
     public static function some(array $array, callable $callback): bool
     {
@@ -34,8 +37,8 @@ final class Arr
     /**
      * Map over an array, preserving keys, with access to both value and key.
      *
-     * @param  array<array-key, mixed>  $array
-     * @param  callable(mixed $value, array-key $key): mixed  $callback
+     * @param  array<array-key, mixed> $array
+     * @param  (callable(TValue, TKey): mixed) $callback
      * @return array<array-key, mixed>
      */
     public static function mapWithKeys(array $array, callable $callback): array

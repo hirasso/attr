@@ -19,9 +19,8 @@ runs:
         coverage: xdebug
 
     - name: Install Composer Dependencies
-      uses: ramsey/composer-install@v3
-      with:
-        composer-options: ${{ inputs.composer-options }}
+      shell: bash
+      run: composer install --prefer-dist --no-progress ${{ inputs.composer-options }}
 
     - name: Setup PNPM
       uses: pnpm/action-setup@v4

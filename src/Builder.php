@@ -41,10 +41,8 @@ final class Builder implements Stringable
      * ->set('data-id', $id)
      * ->set('aria-hidden', $condition ? "true" : null)
      */
-    public function set(
-        string $name,
-        string|int|float|bool|null $value,
-    ): self {
+    public function set(string $name, string|int|float|bool|null $value): self
+    {
         if ($value !== null && $value !== false) {
             $this->attributes[$name] = $value;
         }
@@ -60,8 +58,8 @@ final class Builder implements Stringable
      */
     public function aria(string $name, string $value, ?bool $when = true): self
     {
-        if ($when && !empty(\trim($value))) {
-            $this->attributes["aria-$name"] = $value;
+        if ($when && \trim($value) !== '') {
+            $this->attributes["aria-{$name}"] = $value;
         }
 
         return $this;
@@ -95,10 +93,8 @@ final class Builder implements Stringable
      * ->style('display', 'none', when: $isHidden)
      * ->style('--custom-var', $value)
      */
-    public function style(
-        string $property,
-        string|int|float|null|false $value,
-    ): self {
+    public function style(string $property, string|int|float|null|false $value): self
+    {
         if ($value !== null && $value !== false) {
             $this->styles[$property] = $value;
         }
@@ -129,51 +125,84 @@ final class Builder implements Stringable
      */
     public function toArray(): array
     {
-        // Start with raw attributes (preserves original order and format)
         $attrs = $this->rawAttributes;
 
-        // Add fluent-set attributes
         foreach ($this->attributes as $key => $value) {
             $attrs[$key] = $value;
         }
 
-        // Merge fluent classes with raw classes
-        if (! empty($this->classes)) {
-            $existingClass = $attrs['class'] ?? null;
-            $fluentClasses = \implode(' ', \array_keys($this->classes));
+        $attrs = $this->mergeClasses($attrs);
+        return $this->mergeStyles($attrs);
+    }
 
-            if ($existingClass === null) {
-                $attrs['class'] = $fluentClasses;
-            } elseif (\is_string($existingClass)) {
-                $attrs['class'] = \trim($existingClass . ' ' . $fluentClasses);
-            } elseif (\is_array($existingClass)) {
-                // Add fluent classes to array format
-                foreach ($this->classes as $class => $condition) {
-                    $existingClass[$class] = $condition;
-                }
-                $attrs['class'] = $existingClass;
-            }
+    /**
+     * @param  array<string, mixed>  $attrs
+     * @return array<string, mixed>
+     */
+    private function mergeClasses(array $attrs): array
+    {
+        if ($this->classes === []) {
+            return $attrs;
         }
 
-        // Merge fluent styles with raw styles
-        if (! empty($this->styles)) {
-            $existingStyle = $attrs['style'] ?? null;
+        $existingClass = $attrs['class'] ?? null;
+        $fluentClasses = \implode(' ', \array_keys($this->classes));
 
-            if ($existingStyle === null) {
-                $attrs['style'] = $this->styles;
-            } elseif (\is_string($existingStyle)) {
-                // Convert string to array and merge
-                $parts = [];
-                foreach ($this->styles as $prop => $val) {
-                    $parts[] = "$prop: $val";
-                }
-                $attrs['style'] = \rtrim($existingStyle, '; ') . '; ' . \implode('; ', $parts);
-            } elseif (\is_array($existingStyle)) {
-                foreach ($this->styles as $prop => $val) {
-                    $existingStyle[$prop] = $val;
-                }
-                $attrs['style'] = $existingStyle;
+        if ($existingClass === null) {
+            $attrs['class'] = $fluentClasses;
+
+            return $attrs;
+        }
+
+        if (\is_string($existingClass)) {
+            $attrs['class'] = \trim($existingClass . ' ' . $fluentClasses);
+
+            return $attrs;
+        }
+
+        if (\is_array($existingClass)) {
+            foreach ($this->classes as $class => $condition) {
+                $existingClass[$class] = $condition;
             }
+            $attrs['class'] = $existingClass;
+        }
+
+        return $attrs;
+    }
+
+    /**
+     * @param  array<string, mixed>  $attrs
+     * @return array<string, mixed>
+     */
+    private function mergeStyles(array $attrs): array
+    {
+        if ($this->styles === []) {
+            return $attrs;
+        }
+
+        $existingStyle = $attrs['style'] ?? null;
+
+        if ($existingStyle === null) {
+            $attrs['style'] = $this->styles;
+
+            return $attrs;
+        }
+
+        if (\is_string($existingStyle)) {
+            $parts = [];
+            foreach ($this->styles as $prop => $val) {
+                $parts[] = "{$prop}: {$val}";
+            }
+            $attrs['style'] = \rtrim($existingStyle, '; ') . '; ' . \implode('; ', $parts);
+
+            return $attrs;
+        }
+
+        if (\is_array($existingStyle)) {
+            foreach ($this->styles as $prop => $val) {
+                $existingStyle[$prop] = $val;
+            }
+            $attrs['style'] = $existingStyle;
         }
 
         return $attrs;

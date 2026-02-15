@@ -25,9 +25,7 @@ final readonly class Attr
 
         $attrs = self::transform($attributes);
 
-        return $attrs === []
-            ? ''
-            : ' '.\implode(' ', $attrs).' ';
+        return $attrs === [] ? '' : ' ' . \implode(' ', $attrs) . ' ';
     }
 
     /**
@@ -35,40 +33,57 @@ final readonly class Attr
      */
     private static function validate(array $attrs): void
     {
-        if (Arr::some(\array_keys($attrs), fn ($key) => \is_int($key))) {
+        if (Arr::some(\array_keys($attrs), static fn($key) => \is_int($key))) {
             throw new InvalidArgumentException('All attribute keys must be strings');
         }
 
         foreach ($attrs as $key => $value) {
-            if (! \is_array($value)) {
+            if (!\is_array($value)) {
                 continue;
             }
-            if (! \in_array($key, ['class', 'style'])) {
+            if (!\in_array($key, ['class', 'style'], true)) {
                 throw new InvalidArgumentException("Only 'class' and 'style' can contain an array");
             }
 
-            if ($key === 'style' && Arr::some(\array_keys($value), fn ($k) => \is_int($k))) {
-                throw new InvalidArgumentException('All attribute keys must be strings');
-            }
-
             if ($key === 'style') {
-                if (Arr::some($value, fn ($nested) => $nested === true)) {
-                    throw new InvalidArgumentException('Nested style properties must never be true');
-                }
+                self::validateStyleValue($value);
             }
 
             if ($key === 'class') {
-                if (Arr::some($value, fn ($nestedValue, $nestedKey) => \is_string($nestedKey) && \is_string($nestedValue))) {
-                    throw new InvalidArgumentException("Values for the 'class' array may not be strings");
-                }
-                if (Arr::some($value, fn ($nestedValue, $nestedKey) => \is_int($nestedKey) && ! \is_string($nestedValue))) {
-                    throw new InvalidArgumentException("Numeric keys for the 'class' array must have string values");
-                }
+                self::validateClassValue($value);
             }
 
-            if (Arr::some($value, fn ($nestedValue) => \is_array($nestedValue))) {
-                throw new InvalidArgumentException("Nested array provided for for $key");
+            if (Arr::some($value, static fn($nestedValue) => \is_array($nestedValue))) {
+                throw new InvalidArgumentException("Nested array provided for for {$key}");
             }
+        }
+    }
+
+    private static function validateStyleValue(array $value): void
+    {
+        if (Arr::some(\array_keys($value), static fn($k) => \is_int($k))) {
+            throw new InvalidArgumentException('All attribute keys must be strings');
+        }
+
+        if (Arr::some($value, static fn($nested) => $nested === true)) {
+            throw new InvalidArgumentException('Nested style properties must never be true');
+        }
+    }
+
+    private static function validateClassValue(array $value): void
+    {
+        if (Arr::some(
+            $value,
+            static fn($nestedValue, $nestedKey) => \is_string($nestedKey) && \is_string($nestedValue),
+        )) {
+            throw new InvalidArgumentException("Values for the 'class' array may not be strings");
+        }
+
+        if (Arr::some(
+            $value,
+            static fn($nestedValue, $nestedKey) => \is_int($nestedKey) && !\is_string($nestedValue),
+        )) {
+            throw new InvalidArgumentException("Numeric keys for the 'class' array must have string values");
         }
     }
 
@@ -79,26 +94,21 @@ final readonly class Attr
      */
     private static function transform(array $attrs): array
     {
-        $mapped = Arr::mapWithKeys($attrs, fn ($value, $key) => match (true) {
+        $mapped = Arr::mapWithKeys($attrs, static fn($value, $key) => match (true) {
             /** the key is 'style', the value is an array */
             $key === 'style' && \is_array($value) => self::arrayToStyleString($value),
             /** the key is 'class', the value is an array */
             $key === 'class' && \is_array($value) => self::arrayToClassList($value),
             /** the value is a string */
             \is_string($value) => self::encode($value),
-            default => $value
+            default => $value,
         });
 
-        $filtered = \array_filter($mapped, fn ($value) => ! self::isNullOrFalse($value));
+        $filtered = \array_filter($mapped, static fn($value) => !self::isNullOrFalse($value));
 
         $result = [];
         foreach ($filtered as $key => $value) {
-            /** boolean attributes don't need a value */
-            if ($value === true) {
-                $result[$key] = $key;
-            } else {
-                $result[$key] = "$key=\"$value\"";
-            }
+            $result[$key] = $value === true ? (string) $key : "{$key}=\"{$value}\"";
         }
 
         return $result;
@@ -117,13 +127,17 @@ final readonly class Attr
      */
     private static function arrayToClassList(array $value): ?string
     {
-        $values = \array_filter($value, fn ($v, $k) => \is_int($k) ? \is_string($v) : ! self::isNullOrFalse($v), ARRAY_FILTER_USE_BOTH);
+        $values = \array_filter(
+            $value,
+            static fn($v, $k) => \is_int($k) ? \is_string($v) : !self::isNullOrFalse($v),
+            ARRAY_FILTER_USE_BOTH,
+        );
 
         if ($values === []) {
             return null;
         }
 
-        $classList = Arr::mapWithKeys($values, fn ($v, $k) => \is_int($k) ? $v : $k);
+        $classList = \array_map('strval', Arr::mapWithKeys($values, static fn($v, $k) => \is_int($k) ? $v : $k));
         $classList = \implode(' ', \array_unique($classList));
 
         return self::encode(\trim($classList));
@@ -132,10 +146,9 @@ final readonly class Attr
     /**
      * Create a css style string from an associative array
      */
-    private static function arrayToStyleString(
-        array $arr
-    ): ?string {
-        $directives = \array_filter($arr, fn ($value) => $value !== null && $value !== false);
+    private static function arrayToStyleString(array $arr): ?string
+    {
+        $directives = \array_filter($arr, static fn($value) => $value !== null && $value !== false);
 
         if ($directives === []) {
             return null;
@@ -143,7 +156,7 @@ final readonly class Attr
 
         $mapped = [];
         foreach ($directives as $property => $value) {
-            $mapped[] = self::encode("$property: ".(string) $value);
+            $mapped[] = self::encode("{$property}: " . (string) $value);
         }
 
         return \implode('; ', $mapped);
@@ -152,15 +165,9 @@ final readonly class Attr
     /**
      * Convert entities while preserving already-encoded entities
      */
-    private static function encode(
-        string $html
-    ): string {
-        return \htmlentities(
-            string: $html,
-            flags: ENT_QUOTES,
-            encoding: 'UTF-8',
-            double_encode: false
-        );
+    private static function encode(string $html): string
+    {
+        return \htmlentities(string: $html, flags: ENT_QUOTES, encoding: 'UTF-8', double_encode: false);
     }
 
     /**
@@ -168,20 +175,20 @@ final readonly class Attr
      */
     public static function jsonAttr(array|object|null|false $value): string
     {
-        if (empty($value)) {
+        if ($value === null || $value === false || $value === []) {
             return '';
         }
 
         $json = \json_encode(
             value: $value,
-            flags: JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR
+            flags: JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR,
         );
 
         return \htmlspecialchars(
             string: $json,
             flags: ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
             encoding: 'UTF-8',
-            double_encode: false
+            double_encode: false,
         );
     }
 }

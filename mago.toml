@@ -1,0 +1,45 @@
+# Welcome to Mago!
+# For full documentation, see https://mago.carthage.software/tools/overview
+php-version = "8.2.0"
+
+[source]
+workspace = "."
+paths = ["src/"]
+includes = ["vendor"]
+excludes = ["tests/"]
+
+[formatter]
+preset = "default"
+
+[linter]
+integrations = ["pest", "phpunit"]
+
+[linter.rules]
+ambiguous-function-call = { enabled = false }
+literal-named-argument = { enabled = false }
+halstead = { effort-threshold = 7000 }
+prefer-first-class-callable = { enabled = false }
+function-name = { camel = true }
+cyclomatic-complexity = { threshold = 30 }
+kan-defect = { threshold = 2.5 }
+too-many-methods = { threshold = 12 }
+
+[analyzer]
+# Disable strict checks
+check-missing-type-hints = false
+strict-list-index-checks = false
+no-boolean-literal-comparison = false
+enforce-class-finality = false
+require-api-or-internal = false
+
+# Enable lenient behaviors
+allow-possibly-undefined-array-keys = true
+trust-existence-checks = true
+
+# Optionally disable some checks
+check-throws = false
+
+ignore = [
+  # Inherent to working with mixed[] arrays
+  "mixed-assignment",
+]
