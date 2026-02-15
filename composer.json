@@ -32,13 +32,21 @@
     "symfony/var-dumper": "^7.2"
   },
   "scripts": {
-    "format": "./vendor/bin/pint",
     "test": "./vendor/bin/pest",
     "test:watch": "./vendor/bin/pest --watch",
     "test:coverage": "php -d zend_extension=/Applications/Herd.app/Contents/Resources/xdebug/xdebug-$(php -r 'echo PHP_MAJOR_VERSION . PHP_MINOR_VERSION;')-arm64.so -d xdebug.mode=coverage ./vendor/bin/pest --coverage --coverage-html ./tests/reports",
     "test:ci": "./vendor/bin/pest --coverage-clover coverage.xml",
+    "post-install-cmd": [
+      "pnpm install"
+    ],
+    "lint": "./vendor/bin/mago lint --fix",
+    "format": "./vendor/bin/mago format",
     "analyse": "./vendor/bin/mago analyse",
-    "post-install-cmd": ["pnpm install"]
+    "mago:pipeline": [
+      "mago lint",
+      "mago format",
+      "mago analyze"
+    ]
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
