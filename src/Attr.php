@@ -35,7 +35,7 @@ final readonly class Attr
      */
     private static function validate(array $attrs): void
     {
-        if (Arr::some(\array_keys($attrs), fn ($key) => \is_int($key))) {
+        if (Arr::some(\array_keys($attrs), static fn ($key) => \is_int($key))) {
             throw new InvalidArgumentException('All attribute keys must be strings');
         }
 
@@ -47,27 +47,27 @@ final readonly class Attr
                 throw new InvalidArgumentException("Only 'class' and 'style' can contain an array");
             }
 
-            if ($key === 'style' && Arr::some(\array_keys($value), fn ($k) => \is_int($k))) {
+            if ($key === 'style' && Arr::some(\array_keys($value), static fn ($k) => \is_int($k))) {
                 throw new InvalidArgumentException('All attribute keys must be strings');
             }
 
             if ($key === 'style') {
-                if (Arr::some($value, fn ($nested) => $nested === true)) {
+                if (Arr::some($value, static fn ($nested) => $nested === true)) {
                     throw new InvalidArgumentException('Nested style properties must never be true');
                 }
             }
 
             if ($key === 'class') {
-                if (Arr::some($value, fn ($nestedValue, $nestedKey) => \is_string($nestedKey) && \is_string($nestedValue))) {
+                if (Arr::some($value, static fn ($nestedValue, $nestedKey) => \is_string($nestedKey) && \is_string($nestedValue))) {
                     throw new InvalidArgumentException("Values for the 'class' array may not be strings");
                 }
-                if (Arr::some($value, fn ($nestedValue, $nestedKey) => \is_int($nestedKey) && ! \is_string($nestedValue))) {
+                if (Arr::some($value, static fn ($nestedValue, $nestedKey) => \is_int($nestedKey) && ! \is_string($nestedValue))) {
                     throw new InvalidArgumentException("Numeric keys for the 'class' array must have string values");
                 }
             }
 
-            if (Arr::some($value, fn ($nestedValue) => \is_array($nestedValue))) {
-                throw new InvalidArgumentException("Nested array provided for for $key");
+            if (Arr::some($value, static fn ($nestedValue) => \is_array($nestedValue))) {
+                throw new InvalidArgumentException("Nested array provided for for {$key}");
             }
         }
     }
@@ -79,7 +79,7 @@ final readonly class Attr
      */
     private static function transform(array $attrs): array
     {
-        $mapped = Arr::mapWithKeys($attrs, fn ($value, $key) => match (true) {
+        $mapped = Arr::mapWithKeys($attrs, static fn ($value, $key) => match (true) {
             /** the key is 'style', the value is an array */
             $key === 'style' && \is_array($value) => self::arrayToStyleString($value),
             /** the key is 'class', the value is an array */
@@ -89,7 +89,7 @@ final readonly class Attr
             default => $value
         });
 
-        $filtered = \array_filter($mapped, fn ($value) => ! self::isNullOrFalse($value));
+        $filtered = \array_filter($mapped, static fn ($value) => ! self::isNullOrFalse($value));
 
         $result = [];
         foreach ($filtered as $key => $value) {
@@ -97,7 +97,7 @@ final readonly class Attr
             if ($value === true) {
                 $result[$key] = (string) $key;
             } else {
-                $result[$key] = "$key=\"$value\"";
+                $result[$key] = "{$key}=\"{$value}\"";
             }
         }
 
@@ -117,13 +117,13 @@ final readonly class Attr
      */
     private static function arrayToClassList(array $value): ?string
     {
-        $values = \array_filter($value, fn ($v, $k) => \is_int($k) ? \is_string($v) : ! self::isNullOrFalse($v), ARRAY_FILTER_USE_BOTH);
+        $values = \array_filter($value, static fn ($v, $k) => \is_int($k) ? \is_string($v) : ! self::isNullOrFalse($v), ARRAY_FILTER_USE_BOTH);
 
         if ($values === []) {
             return null;
         }
 
-        $classList = \array_map('strval', Arr::mapWithKeys($values, fn ($v, $k) => \is_int($k) ? $v : $k));
+        $classList = \array_map('strval', Arr::mapWithKeys($values, static fn ($v, $k) => \is_int($k) ? $v : $k));
         $classList = \implode(' ', \array_unique($classList));
 
         return self::encode(\trim($classList));
@@ -135,7 +135,7 @@ final readonly class Attr
     private static function arrayToStyleString(
         array $arr
     ): ?string {
-        $directives = \array_filter($arr, fn ($value) => $value !== null && $value !== false);
+        $directives = \array_filter($arr, static fn ($value) => $value !== null && $value !== false);
 
         if ($directives === []) {
             return null;
@@ -143,7 +143,7 @@ final readonly class Attr
 
         $mapped = [];
         foreach ($directives as $property => $value) {
-            $mapped[] = self::encode("$property: ".(string) $value);
+            $mapped[] = self::encode("{$property}: ".(string) $value);
         }
 
         return \implode('; ', $mapped);

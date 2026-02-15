@@ -61,7 +61,7 @@ final class Builder implements Stringable
     public function aria(string $name, string $value, ?bool $when = true): self
     {
         if ($when && !empty(\trim($value))) {
-            $this->attributes["aria-$name"] = $value;
+            $this->attributes["aria-{$name}"] = $value;
         }
 
         return $this;
@@ -165,7 +165,7 @@ final class Builder implements Stringable
                 // Convert string to array and merge
                 $parts = [];
                 foreach ($this->styles as $prop => $val) {
-                    $parts[] = "$prop: $val";
+                    $parts[] = "{$prop}: {$val}";
                 }
                 $attrs['style'] = \rtrim($existingStyle, '; ') . '; ' . \implode('; ', $parts);
             } elseif (\is_array($existingStyle)) {
