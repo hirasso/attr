@@ -4,7 +4,7 @@ php-version = "8.2.0"
 
 [source]
 workspace = "."
-paths = ["src/", "tests/"]
+paths = ["src/"]
 includes = ["vendor"]
 excludes = []
 
@@ -33,3 +33,8 @@ trust-existence-checks = true
 
 # Optionally disable some checks
 check-throws = false
+
+ignore = [
+  # Inherent to working with mixed[] arrays
+  "mixed-assignment",
+]

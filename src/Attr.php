@@ -95,7 +95,7 @@ final readonly class Attr
         foreach ($filtered as $key => $value) {
             /** boolean attributes don't need a value */
             if ($value === true) {
-                $result[$key] = $key;
+                $result[$key] = (string) $key;
             } else {
                 $result[$key] = "$key=\"$value\"";
             }
@@ -123,7 +123,7 @@ final readonly class Attr
             return null;
         }
 
-        $classList = Arr::mapWithKeys($values, fn ($v, $k) => \is_int($k) ? $v : $k);
+        $classList = \array_map('strval', Arr::mapWithKeys($values, fn ($v, $k) => \is_int($k) ? $v : $k));
         $classList = \implode(' ', \array_unique($classList));
 
         return self::encode(\trim($classList));

@@ -31,9 +31,9 @@ jobs:
 
       - name: Run Mago
         run: |
-          vendor/bin/mago format --dry-run
-          vendor/bin/mago lint --reporting-format=github
           vendor/bin/mago analyze --reporting-format=github
+          vendor/bin/mago lint --reporting-format=github
+          vendor/bin/mago format --dry-run
 
   tests:
     name: PHP ${{ matrix.php }} Tests
