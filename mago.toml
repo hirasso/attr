@@ -6,7 +6,7 @@ php-version = "8.2.0"
 workspace = "."
 paths = ["src/"]
 includes = ["vendor"]
-excludes = []
+excludes = ["tests/"]
 
 [formatter]
 preset = "default"

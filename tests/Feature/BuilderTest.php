@@ -169,7 +169,6 @@ use Hirasso\Attr\Builder;
 
 \test('aria ignores empty values', function () {
     $result = Builder::make()
-        // @phpstan-ignore argument.type
         ->aria('label', '')
         ->aria('description', '  ')
         ->aria('hidden', 'true')
@@ -306,12 +305,9 @@ use Hirasso\Attr\Builder;
 
     $result = Builder::make()
         ->set('type', 'submit')
-        // @phpstan-ignore booleanOr.leftAlwaysTrue, booleanOr.rightAlwaysFalse
         ->set('disabled', $isLoading || $isDisabled)
         ->class('btn px-4 py-2 rounded')
-        // @phpstan-ignore identical.alwaysTrue
         ->class('btn-primary', when: $variant === 'primary')
-        // @phpstan-ignore identical.alwaysFalse
         ->class('btn-secondary', when: $variant === 'secondary')
         ->class('opacity-50 cursor-wait', when: $isLoading)
         ->class('cursor-not-allowed', when: $isDisabled)

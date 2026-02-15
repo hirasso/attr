@@ -69,7 +69,6 @@
 });
 
 \test('throws when provided with a list like attr(["foo", "bar", ...])', function () {
-    // @phpstan-ignore argument.type
     \attr(['foo', 'bar'])->toString();
 })->throws(InvalidArgumentException::class);
 
@@ -83,7 +82,6 @@
 });
 
 \test('throws when provided with a nested array for any attribute', function () {
-    // @phpstan-ignore argument.type
     \attr([
         'class' => [
             'foo' => ['bar'],
