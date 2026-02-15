@@ -17,7 +17,10 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [8.2, 8.3, 8.4, 8.5]
+        php: [8.2, 8.3, 8.4, 8.5, 8.6]
+        include:
+          - php: 8.6
+            composer-options: '--ignore-platform-req=php+'
 
     steps:
       - uses: actions/checkout@v6
@@ -26,6 +29,7 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           php-version: ${{ matrix.php }}
+          composer-options: ${{ matrix.composer-options }}
 
       - name: Run Tests
         run: |
