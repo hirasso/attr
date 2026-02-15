@@ -17,15 +17,19 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [8.2, 8.3, 8.4]
+        php: [8.2, 8.3, 8.4, 8.5, 8.6]
+        include:
+          - php: 8.6
+            composer-options: '--ignore-platform-req=php+'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Environment
         uses: ./.github/actions/setup-environment
         with:
           php-version: ${{ matrix.php }}
+          composer-options: ${{ matrix.composer-options }}
 
       - name: Run Tests
         run: |
@@ -49,7 +53,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Environment
         uses: ./.github/actions/setup-environment
@@ -58,7 +62,7 @@ jobs:
         run: composer format
 
       - name: Commit linted files
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: Format Code
           file_pattern: 'src/*.php tests/*.php'

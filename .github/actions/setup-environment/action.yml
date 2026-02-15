@@ -4,6 +4,9 @@ inputs:
   php-version:
     description: The PHP version to install
     default: 8.3
+  composer-options:
+    description: 'Additional options for composer install'
+    default: ''
 
 runs:
   using: composite
@@ -17,6 +20,8 @@ runs:
 
     - name: Install Composer Dependencies
       uses: ramsey/composer-install@v3
+      with:
+        composer-options: ${{ inputs.composer-options }}
 
     - name: Setup PNPM
       uses: pnpm/action-setup@v4
@@ -24,7 +29,7 @@ runs:
         version: latest
 
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: latest
         cache: pnpm
