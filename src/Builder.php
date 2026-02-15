@@ -193,7 +193,7 @@ final class Builder implements Stringable
             foreach ($this->styles as $prop => $val) {
                 $parts[] = "{$prop}: {$val}";
             }
-            $attrs['style'] = \rtrim($existingStyle, '; ') . '; ' . \implode('; ', $parts);
+            $attrs['style'] = \rtrim($existingStyle, characters: '; ') . '; ' . \implode('; ', $parts);
 
             return $attrs;
         }

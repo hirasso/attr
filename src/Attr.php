@@ -41,7 +41,7 @@ final readonly class Attr
             if (!\is_array($value)) {
                 continue;
             }
-            if (!\in_array($key, ['class', 'style'], true)) {
+            if (!\in_array($key, ['class', 'style'], strict: true)) {
                 throw new InvalidArgumentException("Only 'class' and 'style' can contain an array");
             }
 

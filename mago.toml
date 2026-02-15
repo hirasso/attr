@@ -15,9 +15,6 @@ preset = "default"
 integrations = ["pest", "phpunit"]
 
 [linter.rules]
-ambiguous-function-call = { enabled = false }
-literal-named-argument = { enabled = false }
-halstead = { effort-threshold = 7000 }
 prefer-first-class-callable = { enabled = false }
 function-name = { camel = true }
 cyclomatic-complexity = { threshold = 30 }
@@ -41,7 +38,7 @@ trust-existence-checks = true
 # Optionally disable some checks
 check-throws = false
 
-ignore = [
-  # Inherent to working with mixed[] arrays
-  "mixed-assignment",
-]
+# ignore = [
+#   # Inherent to working with mixed[] arrays
+#   "mixed-assignment",
+# ]
