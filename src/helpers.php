@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 /*
  * Copyright (c) Rasso Hilber
  * https://rassohilber.com
@@ -11,8 +10,7 @@ declare(strict_types=1);
 use Hirasso\Attr\Attr;
 use Hirasso\Attr\Builder;
 
-if (! \function_exists('attr')) {
-
+if (!\function_exists('attr')) {
     /**
      * Create a fluent attribute builder, optionally pre-filled with attributes.
      *
@@ -43,8 +41,7 @@ if (! \function_exists('attr')) {
     }
 }
 
-if (! \function_exists('jsonAttr')) {
-
+if (!\function_exists('jsonAttr')) {
     /**
      * Convert an object or array to JSON that's safe to be used inside a HTMLElement attribute
      */

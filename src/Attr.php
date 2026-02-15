@@ -25,9 +25,7 @@ final readonly class Attr
 
         $attrs = self::transform($attributes);
 
-        return $attrs === []
-            ? ''
-            : ' '.\implode(' ', $attrs).' ';
+        return $attrs === [] ? '' : ' ' . \implode(' ', $attrs) . ' ';
     }
 
     /**
@@ -40,10 +38,10 @@ final readonly class Attr
         }
 
         foreach ($attrs as $key => $value) {
-            if (! \is_array($value)) {
+            if (!\is_array($value)) {
                 continue;
             }
-            if (! \in_array($key, ['class', 'style'], true)) {
+            if (!\in_array($key, ['class', 'style'], true)) {
                 throw new InvalidArgumentException("Only 'class' and 'style' can contain an array");
             }
 
@@ -74,11 +72,17 @@ final readonly class Attr
 
     private static function validateClassValue(array $value): void
     {
-        if (Arr::some($value, static fn ($nestedValue, $nestedKey) => \is_string($nestedKey) && \is_string($nestedValue))) {
+        if (Arr::some(
+            $value,
+            static fn ($nestedValue, $nestedKey) => \is_string($nestedKey) && \is_string($nestedValue),
+        )) {
             throw new InvalidArgumentException("Values for the 'class' array may not be strings");
         }
 
-        if (Arr::some($value, static fn ($nestedValue, $nestedKey) => \is_int($nestedKey) && ! \is_string($nestedValue))) {
+        if (Arr::some(
+            $value,
+            static fn ($nestedValue, $nestedKey) => \is_int($nestedKey) && !\is_string($nestedValue),
+        )) {
             throw new InvalidArgumentException("Numeric keys for the 'class' array must have string values");
         }
     }
@@ -97,16 +101,14 @@ final readonly class Attr
             $key === 'class' && \is_array($value) => self::arrayToClassList($value),
             /** the value is a string */
             \is_string($value) => self::encode($value),
-            default => $value
+            default => $value,
         });
 
-        $filtered = \array_filter($mapped, static fn ($value) => ! self::isNullOrFalse($value));
+        $filtered = \array_filter($mapped, static fn ($value) => !self::isNullOrFalse($value));
 
         $result = [];
         foreach ($filtered as $key => $value) {
-            $result[$key] = $value === true
-                ? (string) $key
-                : "{$key}=\"{$value}\"";
+            $result[$key] = $value === true ? (string) $key : "{$key}=\"{$value}\"";
         }
 
         return $result;
@@ -125,7 +127,11 @@ final readonly class Attr
      */
     private static function arrayToClassList(array $value): ?string
     {
-        $values = \array_filter($value, static fn ($v, $k) => \is_int($k) ? \is_string($v) : ! self::isNullOrFalse($v), ARRAY_FILTER_USE_BOTH);
+        $values = \array_filter(
+            $value,
+            static fn ($v, $k) => \is_int($k) ? \is_string($v) : !self::isNullOrFalse($v),
+            ARRAY_FILTER_USE_BOTH,
+        );
 
         if ($values === []) {
             return null;
@@ -140,9 +146,8 @@ final readonly class Attr
     /**
      * Create a css style string from an associative array
      */
-    private static function arrayToStyleString(
-        array $arr
-    ): ?string {
+    private static function arrayToStyleString(array $arr): ?string
+    {
         $directives = \array_filter($arr, static fn ($value) => $value !== null && $value !== false);
 
         if ($directives === []) {
@@ -151,7 +156,7 @@ final readonly class Attr
 
         $mapped = [];
         foreach ($directives as $property => $value) {
-            $mapped[] = self::encode("{$property}: ".(string) $value);
+            $mapped[] = self::encode("{$property}: " . (string) $value);
         }
 
         return \implode('; ', $mapped);
@@ -160,15 +165,9 @@ final readonly class Attr
     /**
      * Convert entities while preserving already-encoded entities
      */
-    private static function encode(
-        string $html
-    ): string {
-        return \htmlentities(
-            string: $html,
-            flags: ENT_QUOTES,
-            encoding: 'UTF-8',
-            double_encode: false
-        );
+    private static function encode(string $html): string
+    {
+        return \htmlentities(string: $html, flags: ENT_QUOTES, encoding: 'UTF-8', double_encode: false);
     }
 
     /**
@@ -182,14 +181,14 @@ final readonly class Attr
 
         $json = \json_encode(
             value: $value,
-            flags: JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR
+            flags: JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR,
         );
 
         return \htmlspecialchars(
             string: $json,
             flags: ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
             encoding: 'UTF-8',
-            double_encode: false
+            double_encode: false,
         );
     }
 }

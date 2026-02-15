@@ -41,10 +41,8 @@ final class Builder implements Stringable
      * ->set('data-id', $id)
      * ->set('aria-hidden', $condition ? "true" : null)
      */
-    public function set(
-        string $name,
-        string|int|float|bool|null $value,
-    ): self {
+    public function set(string $name, string|int|float|bool|null $value): self
+    {
         if ($value !== null && $value !== false) {
             $this->attributes[$name] = $value;
         }
@@ -95,10 +93,8 @@ final class Builder implements Stringable
      * ->style('display', 'none', when: $isHidden)
      * ->style('--custom-var', $value)
      */
-    public function style(
-        string $property,
-        string|int|float|null|false $value,
-    ): self {
+    public function style(string $property, string|int|float|null|false $value): self
+    {
         if ($value !== null && $value !== false) {
             $this->styles[$property] = $value;
         }
@@ -159,7 +155,7 @@ final class Builder implements Stringable
         }
 
         if (\is_string($existingClass)) {
-            $attrs['class'] = \trim($existingClass.' '.$fluentClasses);
+            $attrs['class'] = \trim($existingClass . ' ' . $fluentClasses);
 
             return $attrs;
         }
@@ -197,7 +193,7 @@ final class Builder implements Stringable
             foreach ($this->styles as $prop => $val) {
                 $parts[] = "{$prop}: {$val}";
             }
-            $attrs['style'] = \rtrim($existingStyle, '; ').'; '.\implode('; ', $parts);
+            $attrs['style'] = \rtrim($existingStyle, '; ') . '; ' . \implode('; ', $parts);
 
             return $attrs;
         }
