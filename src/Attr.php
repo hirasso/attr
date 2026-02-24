@@ -41,7 +41,7 @@ final readonly class Attr
             if (!\is_array($value)) {
                 continue;
             }
-            if (!\in_array($key, ['class', 'style'], true)) {
+            if (!\in_array($key, ['class', 'style'], strict: true)) {
                 throw new InvalidArgumentException("Only 'class' and 'style' can contain an array");
             }
 
@@ -90,7 +90,7 @@ final readonly class Attr
     /**
      * Transform an $attrs array into an array of attribute strings
      *
-     * @return string[]
+     * @return list<string>
      */
     private static function transform(array $attrs): array
     {
@@ -108,7 +108,7 @@ final readonly class Attr
 
         $result = [];
         foreach ($filtered as $key => $value) {
-            $result[$key] = $value === true ? (string) $key : "{$key}=\"{$value}\"";
+            $result[] = $value === true ? (string) $key : "{$key}=\"{$value}\"";
         }
 
         return $result;

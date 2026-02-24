@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 use Hirasso\Attr\Builder;
 
 \test('creates empty attributes', function () {
     $result = Builder::make()->toString();
-    \expect($result)->toBe('');
+    \expect($result)->toBeEmpty();
 });
 
 \test('sets basic attributes', function () {
@@ -36,17 +38,13 @@ use Hirasso\Attr\Builder;
 });
 
 \test('adds single class', function () {
-    $result = Builder::make()
-        ->class('border')
-        ->toString();
+    $result = Builder::make()->class('border')->toString();
 
     \expect($result)->toBe(' class="border" ');
 });
 
 \test('adds multiple classes in one call', function () {
-    $result = Builder::make()
-        ->class('border p-3 rounded')
-        ->toString();
+    $result = Builder::make()->class('border p-3 rounded')->toString();
 
     \expect($result)->toBe(' class="border p-3 rounded" ');
 });
@@ -85,9 +83,7 @@ use Hirasso\Attr\Builder;
 });
 
 \test('adds single style', function () {
-    $result = Builder::make()
-        ->style('color', 'red')
-        ->toString();
+    $result = Builder::make()->style('color', 'red')->toString();
 
     \expect($result)->toBe(' style="color: red" ');
 });
@@ -187,7 +183,9 @@ use Hirasso\Attr\Builder;
         ->aria('label', 'Submit form')
         ->toString();
 
-    \expect($result)->toBe(' type="button" data-action="submit" aria-label="Submit form" class="btn btn-primary disabled" style="color: white" ');
+    \expect($result)->toBe(
+        ' type="button" data-action="submit" aria-label="Submit form" class="btn btn-primary disabled" style="color: white" ',
+    );
 });
 
 \test('merge accepts array of attributes', function () {
@@ -260,10 +258,7 @@ use Hirasso\Attr\Builder;
 });
 
 \test('attr() helper returns Builder', function () {
-    $result = \attr()
-        ->set('type', 'button')
-        ->class('btn')
-        ->toString();
+    $result = \attr()->set('type', 'button')->class('btn')->toString();
 
     \expect($result)->toBe(' type="button" class="btn" ');
 });
@@ -271,9 +266,7 @@ use Hirasso\Attr\Builder;
 \test('escapes attribute values', function () {
     $malicious = \getMaliciousAttributeValue();
 
-    $result = Builder::make()
-        ->set('value', $malicious)
-        ->toString();
+    $result = Builder::make()->set('value', $malicious)->toString();
 
     \expect($result)->toBe(' value="&quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;" ');
 });
@@ -281,9 +274,7 @@ use Hirasso\Attr\Builder;
 \test('escapes class names', function () {
     $malicious = \getMaliciousAttributeValue();
 
-    $result = Builder::make()
-        ->class($malicious)
-        ->toString();
+    $result = Builder::make()->class($malicious)->toString();
 
     \expect($result)->toBe(' class="&quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;" ');
 });
@@ -291,9 +282,7 @@ use Hirasso\Attr\Builder;
 \test('escapes style values', function () {
     $malicious = \getMaliciousAttributeValue();
 
-    $result = Builder::make()
-        ->style('color', $malicious)
-        ->toString();
+    $result = Builder::make()->style('color', $malicious)->toString();
 
     \expect($result)->toBe(' style="color: &quot; onload=&quot;alert(&#039;Hacked!&#039;)&quot;" ');
 });

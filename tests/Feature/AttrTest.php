@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 \test('generates an attribute string', function () {
     $result = (string) \attr(['class' => 'border border-red bg-black']);
     \expect($result)->toBe(' class="border border-red bg-black" ');
@@ -42,7 +44,7 @@
             'font-weight' => false,
         ],
     ]);
-    \expect($result)->toBe('');
+    \expect($result)->toBeEmpty();
 });
 
 \test('handles strings for style and class', function () {
@@ -175,9 +177,7 @@
 
 \test('supports chaining after array initialization', function () {
     $isActive = true;
-    $result = (string) \attr(['type' => 'button'])
-        ->class('btn')
-        ->class('active', when: $isActive);
+    $result = (string) \attr(['type' => 'button'])->class('btn')->class('active', when: $isActive);
 
     \expect($result)->toBe(' type="button" class="btn active" ');
 });

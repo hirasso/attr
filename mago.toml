@@ -4,9 +4,9 @@ php-version = "8.2.0"
 
 [source]
 workspace = "."
-paths = ["src/"]
+paths = ["src", "tests"]
 includes = ["vendor"]
-excludes = ["tests/"]
+excludes = []
 
 [formatter]
 preset = "default"
@@ -15,9 +15,6 @@ preset = "default"
 integrations = ["pest", "phpunit"]
 
 [linter.rules]
-ambiguous-function-call = { enabled = false }
-literal-named-argument = { enabled = false }
-halstead = { effort-threshold = 7000 }
 prefer-first-class-callable = { enabled = false }
 function-name = { camel = true }
 cyclomatic-complexity = { threshold = 30 }
@@ -25,6 +22,8 @@ kan-defect = { threshold = 2.5 }
 too-many-methods = { threshold = 12 }
 
 [analyzer]
+excludes = ["tests"]
+
 # Disable strict checks
 check-missing-type-hints = false
 strict-list-index-checks = false
