@@ -166,7 +166,7 @@ declare(strict_types=1);
 });
 
 \test('encodes double quotes', function () {
-    $result = (string) \attr(['value' => "\""]);
+    $result = (string) \attr(['value' => '"']);
     \expect($result)->toBe(' value="&quot;" ');
 });
 
