@@ -16,5 +16,3 @@ jobs:
         with:
           token: ${{ secrets.HIRASSO_ACTIONS_TOKEN }}
           use-conventional-commits: true
-          author-name: Renovate Changesets
-          author-email: github+renovate@scharley.me
