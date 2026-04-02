@@ -2,13 +2,13 @@ name: Add changeset to Renovate updates
 
 on:
   pull_request_target:
-    types: [opened, synchronize, labeled]
+    types: [opened, synchronize]
 
 jobs:
   renovate:
     name: Update Renovate PR
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'dependencies')
+    if: github.event.pull_request.user.login == 'renovate[bot]'
 
     steps:
       - name: Update PR
