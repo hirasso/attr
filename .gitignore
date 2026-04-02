@@ -11,3 +11,6 @@ node_modules
 # tests
 coverage.xml
 tests/reports
+
+# "AI"
+.claude/settings.local.json
