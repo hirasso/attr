@@ -16,3 +16,4 @@ jobs:
         with:
           token: ${{ secrets.HIRASSO_ACTIONS_TOKEN }}
           use-conventional-commits: true
+          use-semantic-commits: true
