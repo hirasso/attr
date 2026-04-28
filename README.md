@@ -75,11 +75,15 @@ To get Tailwind CSS IntelliSense in VS Code working with `attr()`, add the follo
     "php": "html"
   },
   "tailwindCSS.experimental.classRegex": [
-    "/\\*tw\\*/\\s*['\"]([^'\"]*)['\"]",
-    "class\\(\\s*['\"]([^'\"]*)['\"]",
-    "'class'\\s*=>\\s*['\"]([^'\"]+)['\"]",
-    ["'class'\\s*=>\\s*\\[([^\\]]*)\\]", "['\"]([^'\"]+)['\"]"]
-  ]
+    "/\\*tw\\*/\\s*'([^']*)'", // /*tw*/ hint, single-quoted
+    "/\\*tw\\*/\\s*\"([^\"]*)\"", // /*tw*/ hint, double-quoted
+    "->class\\(\\s*'([^']*)'", // fluent API, single-quoted
+    "->class\\(\\s*\"([^\"]*)\"", // fluent API, double-quoted
+    "'class'\\s*=>\\s*'([^']*)'", // plain string, single-quoted
+    "'class'\\s*=>\\s*\"([^\"]*)\"", // plain string, double-quoted
+    ["'class'\\s*=>\\s*\\[((?:[^\\[\\]]|\\[[^\\]]*\\])*)\\]", "'([^']*)'"], // conditional array, single-quoted
+    ["'class'\\s*=>\\s*\\[((?:[^\\[\\]]|\\[[^\\]]*\\])*)\\]", "\"([^\"]*)\""], // conditional array, double-quoted
+  ],
 }
 ```
 
