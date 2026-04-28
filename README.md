@@ -65,6 +65,44 @@ Render JSON so that it is safe to be used inside an HTMLElement attribute:
 <div x-data="{&quot;open&quot;:true,&quot;message&quot;:&quot;This &#039;quote&#039; contains &lt;b&gt;bold text&lt;\/b&gt;&quot;}"></div>
 ```
 
+## Tailwind CSS IntelliSense
+
+To get Tailwind CSS IntelliSense in VS Code working with `attr()`, add the following to your user settings or `.vscode/settings.json`:
+
+```json
+{
+  "tailwindCSS.includeLanguages": {
+    "php": "html"
+  },
+  "tailwindCSS.experimental.classRegex": [
+    "/\\*tw\\*/\\s*['\"]([^'\"]*)['\"]",
+    "class\\(\\s*['\"]([^'\"]*)['\"]",
+    "'class'\\s*=>\\s*['\"]([^'\"]+)['\"]",
+    ["'class'\\s*=>\\s*\\[([^\\]]*)\\]", "['\"]([^'\"]+)['\"]"]
+  ]
+}
+```
+
+This enables completions for all supported class syntaxes:
+
+```php
+// Fluent API
+->class('block p-3')
+->class('bg-blue-600 text-white', $isActive)
+
+// Array class syntax (plain string)
+'class' => 'block p-3'
+
+// Array class syntax (conditional)
+'class' => [
+    'block p-3',
+    'bg-blue-600 text-white' => $isActive,
+]
+
+// Anywhere else, use the /*tw*/ hint comment
+$class = /*tw*/ 'text-white bg-blue-600';
+```
+
 ## Fluent API
 
 For more expressive attribute building, use the fluent interface:
