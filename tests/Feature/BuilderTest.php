@@ -10,29 +10,19 @@ use Hirasso\Attr\Builder;
 });
 
 \test('sets basic attributes', function () {
-    $result = Builder::make()
-        ->set('type', 'button')
-        ->set('id', 'my-btn')
-        ->toString();
+    $result = Builder::make()->set('type', 'button')->set('id', 'my-btn')->toString();
 
     \expect($result)->toBe(' type="button" id="my-btn" ');
 });
 
 \test('sets boolean attributes', function () {
-    $result = Builder::make()
-        ->set('disabled', true)
-        ->set('readonly', true)
-        ->toString();
+    $result = Builder::make()->set('disabled', true)->set('readonly', true)->toString();
 
     \expect($result)->toBe(' disabled readonly ');
 });
 
 \test('set ignores null and false values', function () {
-    $result = Builder::make()
-        ->set('data-active', 'yes')
-        ->set('data-null', null)
-        ->set('data-false', false)
-        ->toString();
+    $result = Builder::make()->set('data-active', 'yes')->set('data-null', null)->set('data-false', false)->toString();
 
     \expect($result)->toBe(' data-active="yes" ');
 });
@@ -50,11 +40,7 @@ use Hirasso\Attr\Builder;
 });
 
 \test('chains multiple class calls', function () {
-    $result = Builder::make()
-        ->class('border')
-        ->class('p-3')
-        ->class('rounded')
-        ->toString();
+    $result = Builder::make()->class('border')->class('p-3')->class('rounded')->toString();
 
     \expect($result)->toBe(' class="border p-3 rounded" ');
 });
@@ -73,11 +59,7 @@ use Hirasso\Attr\Builder;
 });
 
 \test('deduplicates classes', function () {
-    $result = Builder::make()
-        ->class('border')
-        ->class('border p-3')
-        ->class('border')
-        ->toString();
+    $result = Builder::make()->class('border')->class('border p-3')->class('border')->toString();
 
     \expect($result)->toBe(' class="border p-3" ');
 });
@@ -89,19 +71,13 @@ use Hirasso\Attr\Builder;
 });
 
 \test('chains multiple style calls', function () {
-    $result = Builder::make()
-        ->style('color', 'red')
-        ->style('background', 'white')
-        ->toString();
+    $result = Builder::make()->style('color', 'red')->style('background', 'white')->toString();
 
     \expect($result)->toBe(' style="color: red; background: white" ');
 });
 
 \test('conditional style with when parameter', function () {
-    $result = Builder::make()
-        ->style('color', 'red')
-        ->style('background', false)
-        ->toString();
+    $result = Builder::make()->style('color', 'red')->style('background', false)->toString();
 
     \expect($result)->toBe(' style="color: red" ');
 });
@@ -109,66 +85,43 @@ use Hirasso\Attr\Builder;
 \test('style ignores null values', function () {
     $color = null;
 
-    $result = Builder::make()
-        ->style('color', $color)
-        ->style('background', 'white')
-        ->toString();
+    $result = Builder::make()->style('color', $color)->style('background', 'white')->toString();
 
     \expect($result)->toBe(' style="background: white" ');
 });
 
 \test('supports CSS custom properties', function () {
-    $result = Builder::make()
-        ->style('--primary-color', '#ff0000')
-        ->style('--spacing', '1rem')
-        ->toString();
+    $result = Builder::make()->style('--primary-color', '#ff0000')->style('--spacing', '1rem')->toString();
 
     \expect($result)->toBe(' style="--primary-color: #ff0000; --spacing: 1rem" ');
 });
 
 \test('supports numeric style values', function () {
-    $result = Builder::make()
-        ->style('opacity', 0.5)
-        ->style('z-index', 100)
-        ->toString();
+    $result = Builder::make()->style('opacity', 0.5)->style('z-index', 100)->toString();
 
     \expect($result)->toBe(' style="opacity: 0.5; z-index: 100" ');
 });
 
 \test('data attributes via set', function () {
-    $result = Builder::make()
-        ->set('data-id', 123)
-        ->set('data-active', true)
-        ->set('data-name', 'test')
-        ->toString();
+    $result = Builder::make()->set('data-id', 123)->set('data-active', true)->set('data-name', 'test')->toString();
 
     \expect($result)->toBe(' data-id="123" data-active data-name="test" ');
 });
 
 \test('aria helper adds aria- prefix', function () {
-    $result = Builder::make()
-        ->aria('label', 'Close button')
-        ->aria('hidden', 'true')
-        ->toString();
+    $result = Builder::make()->aria('label', 'Close button')->aria('hidden', 'true')->toString();
 
     \expect($result)->toBe(' aria-label="Close button" aria-hidden="true" ');
 });
 
 \test('aria with conditional when parameter', function () {
-    $result = Builder::make()
-        ->aria('expanded', 'true', when: true)
-        ->aria('disabled', 'true', when: false)
-        ->toString();
+    $result = Builder::make()->aria('expanded', 'true', when: true)->aria('disabled', 'true', when: false)->toString();
 
     \expect($result)->toBe(' aria-expanded="true" ');
 });
 
 \test('aria ignores empty values', function () {
-    $result = Builder::make()
-        ->aria('label', '')
-        ->aria('description', '  ')
-        ->aria('hidden', 'true')
-        ->toString();
+    $result = Builder::make()->aria('label', '')->aria('description', '  ')->aria('hidden', 'true')->toString();
 
     \expect($result)->toBe(' aria-hidden="true" ');
 });
@@ -238,11 +191,7 @@ use Hirasso\Attr\Builder;
 });
 
 \test('toArray returns attributes array', function () {
-    $result = Builder::make()
-        ->set('type', 'button')
-        ->class('btn')
-        ->style('color', 'red')
-        ->toArray();
+    $result = Builder::make()->set('type', 'button')->class('btn')->style('color', 'red')->toArray();
 
     \expect($result)->toBe([
         'type' => 'button',
@@ -323,10 +272,7 @@ use Hirasso\Attr\Builder;
 });
 
 \test('merge class string with fluent class', function () {
-    $result = Builder::make()
-        ->merge(['class' => 'from-merge'])
-        ->class('from-fluent')
-        ->toString();
+    $result = Builder::make()->merge(['class' => 'from-merge'])->class('from-fluent')->toString();
 
     \expect($result)->toBe(' class="from-merge from-fluent" ');
 });
@@ -345,10 +291,7 @@ use Hirasso\Attr\Builder;
 });
 
 \test('merge style string with fluent style', function () {
-    $result = Builder::make()
-        ->merge(['style' => 'color: red'])
-        ->style('background', 'blue')
-        ->toString();
+    $result = Builder::make()->merge(['style' => 'color: red'])->style('background', 'blue')->toString();
 
     \expect($result)->toBe(' style="color: red; background: blue" ');
 });
