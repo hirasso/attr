@@ -69,7 +69,7 @@ Render JSON so that it is safe to be used inside an HTMLElement attribute:
 
 To get Tailwind CSS IntelliSense in VS Code working with `attr()`, add the following to your user settings or `.vscode/settings.json`:
 
-```json
+```js
 {
   "tailwindCSS.includeLanguages": {
     "php": "html"
