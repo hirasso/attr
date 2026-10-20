@@ -65,6 +65,16 @@ Render JSON so that it is safe to be used inside an HTMLElement attribute:
 <div x-data="{&quot;open&quot;:true,&quot;message&quot;:&quot;This &#039;quote&#039; contains &lt;b&gt;bold text&lt;\/b&gt;&quot;}"></div>
 ```
 
+## Namespaced functions
+
+Both helpers are also available as namespaced functions. Use these if another package already declares a global `attr()` or `jsonAttr()` (for example [Kirby](https://getkirby.com/docs/reference/templates/helpers/attr)), or if your IDE picks up the wrong global signature:
+
+```php
+<?php use function Hirasso\Attr\attr; ?>
+
+<button <?= attr()->set('type', 'button')->class('btn') ?>>Click Me!</button>
+```
+
 ## Tailwind CSS IntelliSense
 
 To get Tailwind CSS IntelliSense in VS Code working with `attr()`, add the following to your user settings or `.vscode/settings.json`:
