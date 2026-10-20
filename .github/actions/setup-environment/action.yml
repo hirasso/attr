@@ -20,7 +20,7 @@ runs:
 
     - name: Install Composer Dependencies
       shell: bash
-      run: composer install --prefer-dist --no-progress ${{ inputs.composer-options }}
+      run: composer install --prefer-dist --no-progress --no-scripts ${{ inputs.composer-options }}
 
     - name: Setup PNPM
       uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
