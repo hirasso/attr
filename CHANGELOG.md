@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.5.0
+
+### Minor Changes
+
+- 341b864: Expose `attr()` and `jsonAttr()` as namespaced functions `Hirasso\Attr\attr()` and `Hirasso\Attr\jsonAttr()`, for projects with a conflicting global `attr()` (e.g. Kirby CMS)
+
 ## 4.4.0
 
 ### Minor Changes
