@@ -7,22 +7,11 @@ declare(strict_types=1);
  * https://rassohilber.com
  */
 
-use Hirasso\Attr\Attr;
 use Hirasso\Attr\Builder;
 
 if (!\function_exists('attr')) {
     /**
-     * Create a fluent attribute builder, optionally pre-filled with attributes.
-     *
-     * Usage:
-     *   // Array syntax (original)
-     *   attr(['type' => 'button', 'class' => 'btn'])
-     *
-     *   // Fluent syntax
-     *   attr()->set('type', 'button')->class('btn')
-     *
-     *   // Combined - array + chaining
-     *   attr(['type' => 'button'])->class('active', when: $isActive)
+     * Global alias for `Hirasso\Attr\attr()`
      *
      * @param array{
      *      class?: string|array<int|string, string|int|bool|null>,
@@ -31,22 +20,16 @@ if (!\function_exists('attr')) {
      */
     function attr(?array $attributes = null): Builder
     {
-        $builder = Builder::make();
-
-        if ($attributes !== null) {
-            $builder->merge($attributes);
-        }
-
-        return $builder;
+        return \Hirasso\Attr\attr($attributes);
     }
 }
 
 if (!\function_exists('jsonAttr')) {
     /**
-     * Convert an object or array to JSON that's safe to be used inside a HTMLElement attribute
+     * Global alias for `Hirasso\Attr\jsonAttr()`
      */
     function jsonAttr(array|object|null|false $value = null): string
     {
-        return Attr::jsonAttr($value ?? null);
+        return \Hirasso\Attr\jsonAttr($value);
     }
 }

@@ -14,6 +14,7 @@
       "Hirasso\\Attr\\": "src/"
     },
     "files": [
+      "src/functions.php",
       "src/helpers.php"
     ]
   },
